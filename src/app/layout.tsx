@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist_Mono, Lato } from "next/font/google";
 import "./globals.css";
 import ChatWidget from "@/components/ChatWidget";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const lato = Lato({
+  variable: "--font-lato",
   subsets: ["latin"],
+  weight: ["400", "700"],
 });
 
 const geistMono = Geist_Mono({
@@ -26,11 +27,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${lato.variable} ${geistMono.variable} antialiased`}
       >
         <div
           className="relative flex size-full min-h-screen flex-col bg-[#0d1a12] dark group/design-root overflow-x-hidden"
-          style={{ fontFamily: "'Public Sans', 'Noto Sans', sans-serif" }}
         > 
           {children}
           <ChatWidget />
