@@ -17,6 +17,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Prestilien Pindoh — Software Engineer | Cloud & AI",
   description: "Portfolio of Prestilien Pindoh, Software Engineer specializing in scalable system design, cloud deployment, and intelligent AI integration.",
+  icons: {
+    icon: "/images/profile.png",
+  },
 };
 
 export default function RootLayout({
@@ -26,6 +29,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <link rel="icon" href="/images/profile.png" sizes="any" />
       <body
         className={`${lato.variable} ${geistMono.variable} antialiased`}
       >
