@@ -1,12 +1,37 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
 
 export default function Header() {
   const [open, setOpen] = useState(false)
 
   const handleToggle = () => setOpen(prev => !prev)
-  const handleLinkClick = () => setOpen(false)
+
+  const navigate = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+    e.preventDefault()
+    const el = document.querySelector(id) as HTMLElement | null
+    if (el) {
+      const top = el.getBoundingClientRect().top + window.scrollY - 72
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      window.scrollTo({ top, behavior: reduce ? 'auto' : 'smooth' })
+    }
+    setOpen(false)
+  }
+
+  useEffect(() => {
+    document.body.style.overflow = open ? 'hidden' : ''
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [open])
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false)
+    }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [])
 
   return (
     <>
@@ -33,20 +58,24 @@ export default function Header() {
         <div className="hidden md:flex flex-1 justify-end gap-6">
           <div className="flex items-center gap-6">
             <a
-              className="text-white text-base font-medium leading-normal hover:text-[#38e07b] transition-colors"
+              className="text-white text-base font-medium leading-normal hover:text-[#38e07b] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#38e07b] rounded-md"
               href="#about"
+              onClick={(e) => navigate(e, '#about')}
             >About</a>
             <a
-              className="text-white text-base font-medium leading-normal hover:text-[#38e07b] transition-colors"
+              className="text-white text-base font-medium leading-normal hover:text-[#38e07b] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#38e07b] rounded-md"
               href="#featured-projects"
+              onClick={(e) => navigate(e, '#featured-projects')}
             >Projects</a>
             <a
-              className="text-white text-base font-medium leading-normal hover:text-[#38e07b] transition-colors"
+              className="text-white text-base font-medium leading-normal hover:text-[#38e07b] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#38e07b] rounded-md"
               href="#skills"
+              onClick={(e) => navigate(e, '#skills')}
             >Skills</a>
             <a
-              className="text-white text-base font-medium leading-normal hover:text-[#38e07b] transition-colors"
+              className="text-white text-base font-medium leading-normal hover:text-[#38e07b] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#38e07b] rounded-md"
               href="#contact"
+              onClick={(e) => navigate(e, '#contact')}
             >Contact</a>
           </div>
           <div className="flex items-center justify-center">
@@ -62,10 +91,10 @@ export default function Header() {
       </header>
       <div id="mobile-menu" className={(open ? '' : 'hidden ') + 'bg-[#0d1a12] border-b border-[#264532] md:hidden'}>
         <div className="px-4 pt-2 pb-4 space-y-1 flex flex-col">
-          <a onClick={handleLinkClick} href="#about" className="text-white hover:text-[#38e07b] block px-3 py-2 text-base font-medium transition-colors">About</a>
-          <a onClick={handleLinkClick} href="#featured-projects" className="text-white hover:text-[#38e07b] block px-3 py-2 text-base font-medium transition-colors">Projects</a>
-          <a onClick={handleLinkClick} href="#skills" className="text-white hover:text-[#38e07b] block px-3 py-2 text-base font-medium transition-colors">Skills</a>
-          <a onClick={handleLinkClick} href="#contact" className="text-white hover:text-[#38e07b] block px-3 py-2 text-base font-medium transition-colors">Contact</a>
+          <a onClick={(e) => navigate(e, '#about')} href="#about" className="text-white hover:text-[#38e07b] block px-3 py-2 text-base font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#38e07b] rounded-md">About</a>
+          <a onClick={(e) => navigate(e, '#featured-projects')} href="#featured-projects" className="text-white hover:text-[#38e07b] block px-3 py-2 text-base font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#38e07b] rounded-md">Projects</a>
+          <a onClick={(e) => navigate(e, '#skills')} href="#skills" className="text-white hover:text-[#38e07b] block px-3 py-2 text-base font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#38e07b] rounded-md">Skills</a>
+          <a onClick={(e) => navigate(e, '#contact')} href="#contact" className="text-white hover:text-[#38e07b] block px-3 py-2 text-base font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#38e07b] rounded-md">Contact</a>
           <div className="pt-2 flex justify-center">
             <Image
               src="/images/profile.png"

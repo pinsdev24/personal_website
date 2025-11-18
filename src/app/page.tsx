@@ -7,6 +7,7 @@ import Certification from "@/components/Certification";
 import Contact from "@/components/Contact";
 import BuildAIAgent from "@/components/BuildAIAgent";
 import MoreProject from "@/components/MoreProject";
+import VoiceConversation from "@/components/VoiceConversation";
 
 export default function Home() {
   return (
@@ -20,6 +21,7 @@ export default function Home() {
             <Hero />
             <About />
             <BuildAIAgent />
+            <VoiceConversation />
             <FeaturedProjects />
             <MoreProject />
             <Skills />
