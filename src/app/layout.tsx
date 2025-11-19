@@ -29,7 +29,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <link rel="icon" href="/images/profile.png" sizes="any" />
       <body
         className={`${lato.variable} ${geistMono.variable} antialiased`}
       >
