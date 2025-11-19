@@ -19,9 +19,9 @@ export default function Home() {
             className="layout-content-container flex flex-col max-w-[1200px] flex-1 gap-8 sm:gap-12 md:gap-16"
           >
             <Hero />
+            <VoiceConversation />
             <About />
             <BuildAIAgent />
-            <VoiceConversation />
             <FeaturedProjects />
             <MoreProject />
             <Skills />

@@ -29,12 +29,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
+      <body suppressHydrationWarning
         className={`${lato.variable} ${geistMono.variable} antialiased`}
       >
         <div
           className="relative flex size-full min-h-screen flex-col bg-[#0d1a12] dark group/design-root overflow-x-hidden"
-        > 
+        >
           {children}
           <ChatWidget />
         </div>

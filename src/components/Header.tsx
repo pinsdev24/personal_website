@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
+import { AnimatePresence, motion } from 'framer-motion'
 
 export default function Header() {
   const [open, setOpen] = useState(false)
@@ -89,7 +90,9 @@ export default function Header() {
           </div>
         </div>
       </header>
-      <div id="mobile-menu" className={(open ? '' : 'hidden ') + 'bg-[#0d1a12] border-b border-[#264532] md:hidden'}>
+      <AnimatePresence>
+      {open && (
+      <motion.div id="mobile-menu" initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2, ease: 'easeOut' }} className={'bg-[#0d1a12] border-b border-[#264532] md:hidden'}>
         <div className="px-4 pt-2 pb-4 space-y-1 flex flex-col">
           <a onClick={(e) => navigate(e, '#about')} href="#about" className="text-white hover:text-[#38e07b] block px-3 py-2 text-base font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#38e07b] rounded-md">About</a>
           <a onClick={(e) => navigate(e, '#featured-projects')} href="#featured-projects" className="text-white hover:text-[#38e07b] block px-3 py-2 text-base font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#38e07b] rounded-md">Projects</a>
@@ -105,7 +108,9 @@ export default function Header() {
             />
           </div>
         </div>
-      </div>
+      </motion.div>
+      )}
+      </AnimatePresence>
     </>
   )
 }

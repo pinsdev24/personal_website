@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect, useRef } from 'react'
 import { MessageCircle, X } from 'lucide-react'
+import { AnimatePresence, motion } from 'framer-motion'
 
 export default function ChatWidget() {
   const [open, setOpen] = useState(false)
@@ -26,13 +27,13 @@ export default function ChatWidget() {
         const parsed = JSON.parse(saved) as Array<{ id: string; role: 'user' | 'assistant'; content: string }>
         if (Array.isArray(parsed)) setMessages(parsed)
       }
-    } catch {}
+    } catch { }
   }, [])
 
   useEffect(() => {
     try {
       sessionStorage.setItem('chat:messages', JSON.stringify(messages))
-    } catch {}
+    } catch { }
   }, [messages])
 
   useEffect(() => {
@@ -87,22 +88,29 @@ export default function ChatWidget() {
   return (
     <div className="fixed bottom-4 right-4 z-50">
       {!open && (
-        <button
+        <motion.button
           onClick={() => setOpen(true)}
           className="flex items-center justify-center w-14 h-14 rounded-full bg-[#38e07b] text-[#122118] shadow-lg hover:bg-opacity-90 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#122118]/40 cursor-pointer"
           aria-label="Open chat"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.96 }}
         >
           <MessageCircle className="w-6 h-6" />
-        </button>
+        </motion.button>
       )}
+      <AnimatePresence>
       {open && (
-        <div
+        <motion.div
           ref={dialogRef}
           role="dialog"
           aria-modal="true"
           aria-labelledby="chat-title"
           aria-busy={isLoading}
           className="w-80 sm:w-96 h-96 rounded-xl bg-[#1a2c20] border border-[#264532] shadow-2xl flex flex-col overflow-hidden"
+          initial={{ opacity: 0, y: 12, scale: 0.98 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 12, scale: 0.98 }}
+          transition={{ duration: 0.2, ease: 'easeOut' }}
         >
           <div className="flex items-center justify-between px-4 py-3 border-b border-[#264532]">
             <div className="flex items-center gap-2">
@@ -119,19 +127,21 @@ export default function ChatWidget() {
                 Ask anything about Prestilien, skills, projects, experience, or contact.
               </div>
             )}
-            {messages.map((m) => (
-              <div key={m.id} className={m.role === 'user' ? 'flex justify-end' : 'flex justify-start'}>
-                <div
-                  className={
-                    m.role === 'user'
-                      ? 'max-w-[80%] rounded-lg bg-[#264532] text-white px-3 py-2'
-                      : 'max-w-[80%] rounded-lg bg-[#0f1b13] text-white px-3 py-2 border border-[#264532]'
-                  }
-                >
-                  {m.content}
-                </div>
-              </div>
-            ))}
+            <AnimatePresence initial={false}>
+              {messages.map((m) => (
+                <motion.div key={m.id} className={m.role === 'user' ? 'flex justify-end' : 'flex justify-start'} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 6 }} transition={{ duration: 0.15 }}>
+                  <div
+                    className={
+                      m.role === 'user'
+                        ? 'max-w-[80%] rounded-lg bg-[#264532] text-white px-3 py-2'
+                        : 'max-w-[80%] rounded-lg bg-[#0f1b13] text-white px-3 py-2 border border-[#264532]'
+                    }
+                  >
+                    {m.content}
+                  </div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
             {isLoading && (
               <div className="flex justify-start">
                 <div className="rounded-lg bg-[#0f1b13] text-white px-3 py-2 border border-[#264532]">Thinking…</div>
@@ -184,8 +194,9 @@ export default function ChatWidget() {
               Send
             </button>
           </form>
-        </div>
+        </motion.div>
       )}
+      </AnimatePresence>
     </div>
   )
 }
