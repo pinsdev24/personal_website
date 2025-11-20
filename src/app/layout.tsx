@@ -3,6 +3,7 @@ import { Geist_Mono, Lato } from "next/font/google";
 import "./globals.css";
 import ChatWidget from "@/components/ChatWidget";
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import { Analytics } from '@vercel/analytics/next';
 
 const lato = Lato({
   variable: "--font-lato",
@@ -39,6 +40,7 @@ export default function RootLayout({
           {children}
           <ChatWidget />
           <SpeedInsights />
+          <Analytics />
         </div>
       </body>
     </html>
