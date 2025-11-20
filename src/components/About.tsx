@@ -12,7 +12,7 @@ export default function About() {
         <div className="w-full md:w-2/5 flex justify-center">
           <motion.div className="rounded-xl overflow-hidden border-2 border-transparent hover:border-[#38e07b] transition-colors duration-300 max-w-[350px] w-full aspect-[3/4]" initial={{ opacity: 0, scale: 0.96 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.5, ease: 'easeOut' }}>
             <Image
-              src="/images/pic.png"
+              src="/images/profile_image.jpg"
               alt="Prestilien Pindoh - Software Engineer specializing in System Design and AI Integration"
               width={350}
               height={466}

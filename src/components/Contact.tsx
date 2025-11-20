@@ -11,7 +11,7 @@ export default function Contact() {
         <div className="md:flex-1 md:max-w-[40%]">
           <div className="relative overflow-hidden rounded-lg sm:rounded-xl shadow-lg">
             <Image
-              src="/images/bw.jpg"
+              src="/images/contact_image.png"
               alt="Prestilien Pindoh"
               width={600}
               height={800}
