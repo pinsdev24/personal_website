@@ -12,12 +12,28 @@ type Project = {
 
 const projects: Project[] = [
   {
-    src: '/images/flight-booking-chatbot.png',
+    src: '/images/clustering_client.png',
+    alt: 'E-commerce Client Segmentation - Data analysis identifying VIPs, active buyers, and window shoppers using K-Means clustering',
+    title: 'E-commerce Client Segmentation',
+    description:
+      "Developed a behavioral segmentation model for the 'Amazing' e-commerce marketplace using PCA and K-Means clustering. Analyzed user interactions to identify four key customer segments—VIPs, Confirmed Buyers, Window Shoppers, and Churners—to drive personalized marketing strategies.",
+    href: 'https://github.com/pinsdev24/client_segmentation',
+  },
+  {
+    src: '/images/flightbotai.png',
     alt: 'Flight Booking Chatbot - AI-powered travel assistant developed by Prestilien Pindoh',
     title: 'Flight Booking Chatbot',
     description:
       'Architected a scalable Node.js backend for Air Paradise with PostgreSQL database optimization, reducing query times by 40%. Developed a stateful chatbot with advanced NLP integration using LLM and integrated with a Next.js/TypeScript frontend.',
     href: 'https://flight-booking-chatbot.onrender.com/',
+  },
+  {
+    src: '/images/chest.jpeg',
+    alt: 'Chest X-Ray Pneumonia Detection App - AI-powered medical imaging analysis using ResNet18 and FastAPI',
+    title: 'Chest X-Ray Pneumonia Detection',
+    description:
+      'A modern, AI-powered web application for detecting pneumonia from chest X-ray images. Utilizing a fine-tuned ResNet18 model served via FastAPI, it provides real-time analysis and visualization of results.',
+    href: 'https://github.com/pinsdev24/chest-xray-app',
   },
   {
     src: '/images/todomcp_langgraph.png',
