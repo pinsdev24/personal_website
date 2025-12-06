@@ -2,6 +2,8 @@
 import { useState, useEffect, useRef } from 'react'
 import { MessageCircle, X } from 'lucide-react'
 import { AnimatePresence, motion } from 'framer-motion'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 
 export default function ChatWidget() {
   const [open, setOpen] = useState(false)
@@ -99,103 +101,134 @@ export default function ChatWidget() {
         </motion.button>
       )}
       <AnimatePresence>
-      {open && (
-        <motion.div
-          ref={dialogRef}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="chat-title"
-          aria-busy={isLoading}
-          className="w-80 sm:w-96 h-96 rounded-xl bg-[#1a2c20] border border-[#264532] shadow-2xl flex flex-col overflow-hidden"
-          initial={{ opacity: 0, y: 12, scale: 0.98 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: 12, scale: 0.98 }}
-          transition={{ duration: 0.2, ease: 'easeOut' }}
-        >
-          <div className="flex items-center justify-between px-4 py-3 border-b border-[#264532]">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-[#38e07b]"></div>
-              <p id="chat-title" className="text-white text-sm font-semibold">Ask about Prestilien</p>
-            </div>
-            <button aria-label="Close chat" onClick={() => setOpen(false)} className="text-white hover:text-[#38e07b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#38e07b] rounded-md">
-              <X className="w-5 h-5" />
-            </button>
-          </div>
-          <div ref={containerRef} aria-live="polite" className="flex-1 overflow-y-auto p-3 space-y-3">
-            {messages.length === 0 && (
-              <div className="text-[#96c5a9] text-sm">
-                Ask anything about Prestilien, skills, projects, experience, or contact.
-              </div>
-            )}
-            <AnimatePresence initial={false}>
-              {messages.map((m) => (
-                <motion.div key={m.id} className={m.role === 'user' ? 'flex justify-end' : 'flex justify-start'} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 6 }} transition={{ duration: 0.15 }}>
-                  <div
-                    className={
-                      m.role === 'user'
-                        ? 'max-w-[80%] rounded-lg bg-[#264532] text-white px-3 py-2'
-                        : 'max-w-[80%] rounded-lg bg-[#0f1b13] text-white px-3 py-2 border border-[#264532]'
-                    }
-                  >
-                    {m.content}
-                  </div>
-                </motion.div>
-              ))}
-            </AnimatePresence>
-            {isLoading && (
-              <div className="flex justify-start">
-                <div className="rounded-lg bg-[#0f1b13] text-white px-3 py-2 border border-[#264532]">Thinking…</div>
-              </div>
-            )}
-            {error && (
-              <div className="text-red-400 text-xs">{error}</div>
-            )}
-          </div>
-          <form
-            onSubmit={async (e) => {
-              e.preventDefault()
-              if (!input.trim()) return
-              setError(null)
-              const userMessage = { id: crypto.randomUUID(), role: 'user' as const, content: input.trim() }
-              const nextMessages = [...messages, userMessage]
-              setMessages(nextMessages)
-              setInput('')
-              setIsLoading(true)
-              try {
-                const res = await fetch('/api/chat', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ messages: nextMessages.map(m => ({ role: m.role, content: m.content })) }),
-                })
-                if (!res.ok) throw new Error('Request failed')
-                const data = await res.json()
-                const assistantMessage = { id: crypto.randomUUID(), role: 'assistant' as const, content: String(data.text ?? '') }
-                setMessages(prev => [...prev, assistantMessage])
-              } catch {
-                setError('Something went wrong. Check your API key.')
-              } finally {
-                setIsLoading(false)
-              }
-            }}
-            className="p-3 border-t border-[#264532] flex items-center gap-2"
+        {open && (
+          <motion.div
+            ref={dialogRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="chat-title"
+            aria-busy={isLoading}
+            className="w-80 sm:w-96 h-96 rounded-xl bg-[#1a2c20] border border-[#264532] shadow-2xl flex flex-col overflow-hidden"
+            initial={{ opacity: 0, y: 12, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 12, scale: 0.98 }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
           >
-            <input
-              ref={inputRef}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Type your question"
-              className="flex-1 rounded-lg bg-[#0f1b13] text-white px-3 py-2 border border-[#264532] placeholder-[#96c5a9] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#38e07b]"
-            />
-            <button
-              type="submit"
-              className="rounded-lg bg-[#38e07b] text-[#122118] px-3 py-2 font-semibold hover:bg-opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#122118]/40"
-              disabled={isLoading || !input.trim()}
+            <div className="flex items-center justify-between px-4 py-3 border-b border-[#264532]">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-[#38e07b]"></div>
+                <p id="chat-title" className="text-white text-sm font-semibold">Ask about Prestilien</p>
+              </div>
+              <button aria-label="Close chat" onClick={() => setOpen(false)} className="text-white hover:text-[#38e07b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#38e07b] rounded-md">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div ref={containerRef} aria-live="polite" className="flex-1 overflow-y-auto p-3 space-y-3">
+              {messages.length === 0 && (
+                <div className="text-[#96c5a9] text-sm">
+                  Ask anything about Prestilien, skills, projects, experience, or contact.
+                </div>
+              )}
+              <AnimatePresence initial={false}>
+                {messages.map((m) => (
+                  <motion.div key={m.id} className={m.role === 'user' ? 'flex justify-end' : 'flex justify-start'} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 6 }} transition={{ duration: 0.15 }}>
+                    <div
+                      className={
+                        m.role === 'user'
+                          ? 'max-w-[80%] rounded-lg bg-[#264532] text-white px-3 py-2'
+                          : 'max-w-[80%] rounded-lg bg-[#0f1b13] text-white px-3 py-2 border border-[#264532]'
+                      }
+                    >
+                      {m.role === 'assistant' ? (
+                        <div className="text-sm">
+                          <ReactMarkdown
+                            remarkPlugins={[remarkGfm]}
+                            components={{
+                              ul: ({ node, ...props }: any) => <ul className="list-disc pl-4 mb-2 space-y-1" {...props} />,
+                              ol: ({ node, ...props }: any) => <ol className="list-decimal pl-4 mb-2 space-y-1" {...props} />,
+                              li: ({ node, ...props }: any) => <li className="" {...props} />,
+                              p: ({ node, ...props }: any) => <p className="mb-2 last:mb-0" {...props} />,
+                              a: ({ node, ...props }: any) => <a className="text-[#38e07b] hover:underline" target="_blank" rel="noopener noreferrer" {...props} />,
+                              strong: ({ node, ...props }: any) => <strong className="font-bold text-white" {...props} />,
+                              h1: ({ node, ...props }: any) => <h1 className="text-lg font-bold mb-2 text-white" {...props} />,
+                              h2: ({ node, ...props }: any) => <h2 className="text-base font-bold mb-2 text-white" {...props} />,
+                              h3: ({ node, ...props }: any) => <h3 className="text-sm font-bold mb-1 text-white" {...props} />,
+                              blockquote: ({ node, ...props }: any) => <blockquote className="border-l-2 border-[#38e07b] pl-2 italic my-2" {...props} />,
+                              code: ({ node, ...props }: any) => <code className="bg-black/30 rounded px-1 py-0.5 text-xs font-mono" {...props} />,
+                            }}
+                          >
+                            {m.content}
+                          </ReactMarkdown>
+                        </div>
+                      ) : (
+                        m.content
+                      )}
+                    </div>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+              {isLoading && (
+                <div className="flex justify-start">
+                  <div className="rounded-lg bg-[#0f1b13] text-white px-3 py-2 border border-[#264532]">Thinking…</div>
+                </div>
+              )}
+              {error && (
+                <div className="text-red-400 text-xs">{error}</div>
+              )}
+            </div>
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault()
+                if (!input.trim()) return
+                setError(null)
+                const userMessage = { id: crypto.randomUUID(), role: 'user' as const, content: input.trim() }
+                const nextMessages = [...messages, userMessage]
+                setMessages(nextMessages)
+                setInput('')
+                setIsLoading(true)
+                try {
+                  const res = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      messages: nextMessages.map(m => ({ role: m.role, content: m.content })),
+                      chatId: sessionStorage.getItem('chat:id')
+                    }),
+                  })
+                  if (!res.ok) throw new Error('Request failed')
+                  const data = await res.json()
+
+                  if (data.chatId) {
+                    sessionStorage.setItem('chat:id', data.chatId)
+                  }
+
+                  const assistantMessage = { id: crypto.randomUUID(), role: 'assistant' as const, content: String(data.text ?? '') }
+                  setMessages(prev => [...prev, assistantMessage])
+                } catch {
+                  setError('Something went wrong. Check your API key.')
+                } finally {
+                  setIsLoading(false)
+                }
+              }}
+              className="p-3 border-t border-[#264532] flex items-center gap-2"
             >
-              Send
-            </button>
-          </form>
-        </motion.div>
-      )}
+              <input
+                ref={inputRef}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Type your question"
+                className="flex-1 rounded-lg bg-[#0f1b13] text-white px-3 py-2 border border-[#264532] placeholder-[#96c5a9] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#38e07b]"
+              />
+              <button
+                type="submit"
+                className="rounded-lg bg-[#38e07b] text-[#122118] px-3 py-2 font-semibold hover:bg-opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#122118]/40"
+                disabled={isLoading || !input.trim()}
+              >
+                Send
+              </button>
+            </form>
+          </motion.div>
+        )}
       </AnimatePresence>
     </div>
   )

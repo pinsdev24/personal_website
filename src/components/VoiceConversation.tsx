@@ -119,14 +119,14 @@ export default function VoiceConversation() {
   const [micMuted, setMicMuted] = useState(false)
 
   const conversation = useConversation({
-    onConnect: () => {},
-    onDisconnect: () => {},
+    onConnect: () => { },
+    onDisconnect: () => { },
     onError: (err) => {
       setError('Failed to connect. Check agent settings.')
       console.error(err)
     },
-    onStatusChange: () => {},
-    onModeChange: () => {},
+    onStatusChange: () => { },
+    onModeChange: () => { },
     micMuted,
   })
 
@@ -152,7 +152,7 @@ export default function VoiceConversation() {
     const ok = await ensureMic()
     if (!ok) return
     setBusy(true)
-    
+
     try {
       await conversation.startSession({
         agentId: agentId ?? '',
@@ -194,7 +194,7 @@ export default function VoiceConversation() {
             </p>
           </div>
           <p className="text-[#96c5a9] text-base sm:text-lg leading-relaxed mt-3">
-            Speak with my personal voice assistant powered by ElevenLabs. Grant microphone access to start a real-time conversation.
+            Speak with my personal voice assistant powered by ElevenLabs. Grant microphone access to start a real-time conversation. Please note that the conversation is limited to 5 minutes.
           </p>
           <AnimatePresence>
             {error && (

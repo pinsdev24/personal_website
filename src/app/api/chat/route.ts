@@ -1,5 +1,8 @@
 import { generateText } from 'ai'
 import { google } from '@ai-sdk/google'
+import { db } from '@/db'
+import { chats, messages } from '@/db/schema'
+import { eq } from 'drizzle-orm'
 
 const SITE_CONTEXT = `You are a helpful assistant for Prestilien Pindoh's personal site.
 Name: Prestilien Pindoh
@@ -16,20 +19,54 @@ export async function POST(req: Request) {
   }
 
   const body = await req.json()
-  const inputMessages: Array<{ role: 'user' | 'assistant' | 'system'; content: string }> = body?.messages ?? []
-  const prompt = (inputMessages
-    .filter((m) => m.role === 'user' || m.role === 'assistant')
-    .map((m) => `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`)
-    .join('\n')) || 'User: Hello'
+  const { messages: inputMessages, chatId: providedChatId } = body
 
-  const result = await generateText({
-    model: google('gemini-2.5-flash-lite'),
-    system: SITE_CONTEXT,
-    prompt,
-    tools: {
-      google_search: google.tools.googleSearch({}),
-    }
-  })
+  let chatId = providedChatId
 
-  return Response.json({ text: result.text })
+  // Create chat if not exists
+  if (!chatId) {
+    const [newChat] = await db.insert(chats).values({}).returning()
+    chatId = newChat.id
+  }
+
+  const lastMessage = inputMessages[inputMessages.length - 1]
+
+  // Save user message
+  if (lastMessage.role === 'user') {
+    await db.insert(messages).values({
+      chatId,
+      role: 'user',
+      content: lastMessage.content
+    })
+  }
+
+  // Sanitize messages for CoreMessage format
+  const coreMessages = inputMessages
+    .filter((m: any) => m.role === 'user' || m.role === 'assistant')
+    .map((m: any) => ({ role: m.role, content: m.content }))
+
+  try {
+    const result = await generateText({
+      model: google('gemini-2.5-flash-lite'),
+      system: SITE_CONTEXT,
+      messages: coreMessages,
+      tools: {
+        google_search: google.tools.googleSearch({}),
+      }
+    })
+
+    const responseText = result.text
+
+    // Save assistant message
+    await db.insert(messages).values({
+      chatId,
+      role: 'assistant',
+      content: responseText
+    })
+
+    return Response.json({ text: responseText, chatId })
+  } catch (error) {
+    console.error('Generation error:', error)
+    return new Response('Failed to generate response', { status: 500 })
+  }
 }
