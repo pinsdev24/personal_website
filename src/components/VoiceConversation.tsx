@@ -118,6 +118,12 @@ export default function VoiceConversation() {
   const [error, setError] = useState<string | null>(null)
   const [micMuted, setMicMuted] = useState(false)
 
+  const language = useMemo(() => {
+    if (typeof navigator === 'undefined') return 'en'
+    const lang = navigator.language.slice(0, 2)
+    return ['fr', 'nl'].includes(lang) ? lang : 'en'
+  }, [])
+
   const conversation = useConversation({
     onConnect: () => { },
     onDisconnect: () => { },
@@ -128,6 +134,11 @@ export default function VoiceConversation() {
     onStatusChange: () => { },
     onModeChange: () => { },
     micMuted,
+    overrides: {
+      agent: {
+        language,
+      },
+    },
   })
 
   const userId = useMemo(() => `visitor-${crypto.randomUUID()}`, [])
