@@ -194,7 +194,7 @@ export default function VoiceConversation() {
             </p>
           </div>
           <p className="text-[#96c5a9] text-base sm:text-lg leading-relaxed mt-3">
-            Speak with my personal voice assistant powered by ElevenLabs. Grant microphone access to start a real-time conversation. Please note that the conversation is limited to 5 minutes.
+            Speak with my personal voice assistant powered by ElevenLabs. Grant microphone access to start a real-time conversation. Please note that the conversation is limited to 3 minutes.
           </p>
           <AnimatePresence>
             {error && (
