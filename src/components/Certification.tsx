@@ -17,10 +17,16 @@ const certifications: Certification[] = [
     image: "/images/aws-certified-developer-associate.png",
   },
   {
-    title: "LangChain Certified",
-    issuer: "LangChain",
+    title: "Deep Research with LangGraph",
+    issuer: "LangChain Academy",
     url: "https://academy.langchain.com/certificates/pzfratlaov",
     image: "/images/langchain_academy_certificate.png",
+  },
+  {
+    title: "Deep Agents with LangGraph",
+    issuer: "LangChain Academy",
+    url: "https://academy.langchain.com/certificates/fwsryt2jhm",
+    image: "/images/certificate-714493365.jpg",
   },
 ]
 
@@ -30,7 +36,7 @@ export default function Certification() {
       <h2 className="text-white text-3xl sm:text-4xl font-bold leading-tight tracking-tighter px-4 pb-6 sm:pb-8 pt-4 sm:pt-5">
         Certifications
       </h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 p-4">
         {certifications.map((c) => (
           <motion.a
             key={c.title}
@@ -44,7 +50,7 @@ export default function Certification() {
               <Image
                 className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                 src={c.image}
-                alt={c.title} 
+                alt={c.title}
                 width={400}
                 height={225}
               />
