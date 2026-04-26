@@ -1,6 +1,8 @@
 "use client"
 import Image from 'next/image'
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
+import { ArrowUpRight } from 'lucide-react'
+import { fadeUp, stagger, viewportOnce } from '@/lib/animations'
 
 type Project = {
   src: string
@@ -8,95 +10,143 @@ type Project = {
   title: string
   description: string
   href: string
+  tags: string[]
 }
 
 const projects: Project[] = [
   {
     src: '/images/clustering_client.png',
-    alt: 'E-commerce Client Segmentation - Data analysis identifying VIPs, active buyers, and window shoppers using K-Means clustering',
+    alt: 'E-commerce Client Segmentation',
     title: 'E-commerce Client Segmentation',
-    description:
-      "Developed a behavioral segmentation model for the 'Amazing' e-commerce marketplace using PCA and K-Means clustering. Analyzed user interactions to identify four key customer segments—VIPs, Confirmed Buyers, Window Shoppers, and Churners—to drive personalized marketing strategies.",
+    description: 'Behavioral segmentation model using PCA and K-Means clustering to identify customer segments — VIPs, Confirmed Buyers, Window Shoppers, and Churners.',
     href: 'https://github.com/pinsdev24/client_segmentation',
+    tags: ['Machine Learning', 'Python', 'Data Science'],
   },
   {
     src: '/images/flightbotai.png',
-    alt: 'Flight Booking Chatbot - AI-powered travel assistant developed by Prestilien Pindoh',
+    alt: 'Flight Booking Chatbot',
     title: 'Flight Booking Chatbot',
-    description:
-      'Architected a scalable Node.js backend for Air Paradise with PostgreSQL database optimization, reducing query times by 40%. Developed a stateful chatbot with advanced NLP integration using LLM and integrated with a Next.js/TypeScript frontend.',
+    description: 'Scalable Node.js backend with PostgreSQL optimization and a stateful chatbot with advanced NLP integration, reducing query times by 40%.',
     href: 'https://flight-booking-chatbot.onrender.com/',
+    tags: ['Node.js', 'LLM', 'Next.js'],
   },
   {
     src: '/images/chest.jpeg',
-    alt: 'Chest X-Ray Pneumonia Detection App - AI-powered medical imaging analysis using ResNet18 and FastAPI',
+    alt: 'Chest X-Ray Pneumonia Detection',
     title: 'Chest X-Ray Pneumonia Detection',
-    description:
-      'A modern, AI-powered web application for detecting pneumonia from chest X-ray images. Utilizing a fine-tuned ResNet18 model served via FastAPI, it provides real-time analysis and visualization of results.',
+    description: 'AI-powered web application for detecting pneumonia from chest X-ray images using a fine-tuned ResNet18 model served via FastAPI.',
     href: 'https://github.com/pinsdev24/chest-xray-app',
+    tags: ['Deep Learning', 'FastAPI', 'PyTorch'],
   },
   {
     src: '/images/todomcp_langgraph.png',
-    alt: 'Todo MCP Agent - AI agent for todo management by Prestilien Pindoh',
+    alt: 'Todo MCP Agent',
     title: 'Todo MCP Server',
-    description:
-      'An MCP server build with python, pydantic and sqlite to manage personal todo list. The server is connected to a local MCP client to provide a simple interface to manage the todo list.',
+    description: 'An MCP server built with Python, Pydantic and SQLite to manage personal todo lists, connected to a local MCP client.',
     href: 'https://github.com/pinsdev24/IntelligentSystemsLab/tree/main/ai-agent/todo-agent-mcp',
+    tags: ['MCP', 'Python', 'AI Agent'],
   },
   {
     src: '/images/valide_landing.png',
-    alt: 'Valide - Educational platform by Prestilien Pindoh revolutionizing education in Cameroon',
+    alt: 'Valide — Educational Platform',
     title: 'Valide',
-    description:
-      'Educational platform revolutionizing learning in Cameroon through AI-powered assistance, comprehensive academic resources, and a vibrant student community network, helping create better prepared and highly employable graduates.',
+    description: 'Educational platform revolutionizing learning in Cameroon through AI-powered assistance and comprehensive academic resources.',
     href: 'https://valide237.web.app/',
+    tags: ['Full Stack', 'AI', 'Education'],
   },
   {
     src: '/images/afrikdelices.png',
-    alt: 'Afrik Delices - African cuisine e-commerce platform developed by Prestilien Pindoh',
+    alt: 'Afrik Delices',
     title: 'Afrik Delices',
-    description:
-      'A culinary platform showcasing authentic African recipes and food culture, connecting food enthusiasts with traditional cooking techniques and ingredients from across the continent.',
+    description: 'A culinary platform showcasing authentic African recipes, connecting food enthusiasts with traditional cooking from across the continent.',
     href: 'https://afrikdelices.com/',
+    tags: ['E-commerce', 'Full Stack'],
   },
 ]
 
 export default function FeaturedProjects() {
+  const reduce = useReducedMotion()
+
   return (
-    <motion.section id="featured-projects" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6, ease: 'easeOut' }}>
-      <h2 className="text-white text-2xl sm:text-3xl md:text-4xl font-bold leading-tight tracking-tighter px-4 pb-6 sm:pb-8 pt-3 sm:pt-5">
-        Featured Projects
-      </h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-        {projects.map((p) => (
-          <motion.div key={p.title} className="group flex flex-col gap-4 rounded-xl bg-[#1a2c20] p-6 border border-transparent hover:border-[#38e07b] transition-all duration-300" initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, ease: 'easeOut' }} whileHover={{ y: -4 }}>
-            <div className="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-lg flex flex-col overflow-hidden">
-              <Image
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                src={p.src}
-                alt={p.alt}
-                width={400}
-                height={225}
-              />
-            </div>
-            <div>
-              <p className="text-white text-xl font-bold leading-normal">{p.title}</p>
-              <p className="text-[#96c5a9] text-base font-normal leading-relaxed mt-2">{p.description}</p>
-              <div className="mt-4">
-                <motion.a
-                  href={p.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center rounded-full h-10 px-6 bg-[#38e07b] text-[#122118] text-base font-bold leading-normal tracking-[0.015em] hover:bg-opacity-90 transition-colors"
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <span className="truncate">View Project</span>
-                </motion.a>
+    <motion.section
+      id="featured-projects"
+      className="section-container"
+      initial="hidden"
+      whileInView="visible"
+      viewport={viewportOnce}
+      variants={stagger}
+    >
+      <div className="max-w-[1200px] mx-auto px-6 md:px-10">
+        <motion.div variants={fadeUp}>
+          <span className="line-accent" />
+          <p className="text-xs font-medium tracking-[0.15em] uppercase mb-2" style={{ color: 'var(--fg-muted)' }}>
+            Portfolio
+          </p>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-[-0.03em] leading-tight mb-12" style={{ color: 'var(--fg)' }}>
+            Featured Projects
+          </h2>
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+          {projects.map((p, i) => (
+            <motion.a
+              key={p.title}
+              href={p.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex flex-col rounded-2xl overflow-hidden card-lift"
+              style={{
+                background: 'var(--card-bg)',
+                border: '1px solid var(--card-border)',
+              }}
+              variants={fadeUp}
+              whileHover={reduce ? {} : { y: -4 }}
+            >
+              {/* Image */}
+              <div className="w-full aspect-[16/10] overflow-hidden" style={{ background: 'var(--bg-secondary)' }}>
+                <Image
+                  src={p.src}
+                  alt={p.alt}
+                  width={600}
+                  height={375}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                />
               </div>
-            </div>
-          </motion.div>
-        ))}
+
+              {/* Content */}
+              <div className="p-6 flex flex-col flex-1">
+                <div className="flex items-start justify-between gap-3 mb-3">
+                  <h3 className="text-lg font-semibold" style={{ color: 'var(--fg)' }}>
+                    {p.title}
+                  </h3>
+                  <ArrowUpRight
+                    size={18}
+                    className="flex-shrink-0 mt-0.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                    style={{ color: 'var(--fg-muted)' }}
+                  />
+                </div>
+                <p className="text-sm leading-relaxed mb-4 flex-1" style={{ color: 'var(--fg-secondary)' }}>
+                  {p.description}
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {p.tags.map(tag => (
+                    <span
+                      key={tag}
+                      className="px-3 py-1 rounded-full text-xs font-medium"
+                      style={{
+                        background: 'var(--tag-bg)',
+                        color: 'var(--fg-muted)',
+                        border: '1px solid var(--tag-border)',
+                      }}
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </motion.a>
+          ))}
+        </div>
       </div>
     </motion.section>
   )

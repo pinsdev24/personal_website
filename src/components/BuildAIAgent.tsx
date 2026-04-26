@@ -1,53 +1,121 @@
-"use client";
-import Image from "next/image";
-import { motion } from "framer-motion";
-import { Github } from "lucide-react";
+"use client"
+import Image from 'next/image'
+import { motion } from 'framer-motion'
+import { Github, ExternalLink } from 'lucide-react'
+import { fadeUp, slideInLeft, slideInRight, stagger, viewportOnce } from '@/lib/animations'
+
+type AIProject = {
+  title: string
+  description: string
+  image: string
+  link: string
+  isGithub?: boolean
+  highlights: string[]
+}
+
+const aiProjects: AIProject[] = [
+  {
+    title: "DeepResearch Agent",
+    description: "I build production-grade AI agents that plan, act, and learn across complex workflows. Using LangChain for tool orchestration, LangGraph for reliable graph-based control over multi-step flows, and LangSmith for tracing and evaluation.",
+    image: "/images/deepresearch-agent.png",
+    link: "https://github.com/pinsdev24/IntelligentSystemsLab/tree/main/ai-agent/deep_research_agent_from_scratch",
+    isGithub: true,
+    highlights: ["LangChain", "LangGraph", "LangSmith"]
+  },
+  {
+    title: "StudentHub",
+    description: "An AI-powered academic ecosystem that transforms course materials into intelligent study assistants. It utilizes advanced RAG to analyze syllabuses and PDFs, providing verified answers with precise source citations and automated quiz generation to eliminate AI hallucinations.",
+    image: "/images/studenthub.png",
+    link: "https://studenthub-frontend.vercel.app/",
+    isGithub: false,
+    highlights: ["RAG", "PDF Intelligence", "Academic AI"]
+  }
+]
 
 export default function BuildAIAgent() {
   return (
-    <motion.section id="ai-agents" className="px-4 py-8 sm:py-12" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6, ease: 'easeOut' }}>
-        <h2
-        className="text-white text-2xl sm:text-3xl md:text-4xl font-bold leading-tight tracking-tighter pb-6 sm:pb-8 pt-3 sm:pt-5"
-        >
-        Building AI Agents
-        </h2>
-        <div className="flex flex-col md:flex-row-reverse items-center gap-8 md:gap-12">
-        <div className="w-full md:w-2/5">
-            <h3 className="text-white text-xl sm:text-2xl font-bold leading-normal">DeepResearch Agent</h3>
-            <motion.div className="text-gray-200 space-y-4 mt-3" initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, ease: 'easeOut' }}>
-            <p className="text-base sm:text-lg leading-relaxed">
-                I build production-grade AI agents that plan, act, and learn across complex workflows.
-                I use <span className="text-[#38e07b] font-semibold">LangChain</span> for tool orchestration and prompting,
-                <span className="text-[#38e07b] font-semibold">LangGraph</span> for reliable graph-based control over multi-step and multi-agent flows,
-                and <span className="text-[#38e07b] font-semibold">LangSmith</span> for tracing, evaluation, and regression testing.
-            </p>
-            </motion.div>
-            <div className="mt-4">
-              <motion.a
-                href="https://github.com/pinsdev24/IntelligentSystemsLab/tree/main/ai-agent/deep_research_agent_from_scratch"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 rounded-full h-10 px-6 bg-[#38e07b] text-[#122118] text-base font-bold leading-normal tracking-[0.015em] ring-1 ring-[#38e07b] hover:ring-2 transition-colors transition-shadow hover:bg-opacity-90 hover:shadow-[0_0_24px_rgba(56,224,123,0.35)]"
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.98 }}
-                aria-label="View DeepResearch Agent on GitHub"
+    <motion.section
+      id="ai-agents"
+      className="section-container"
+      initial="hidden"
+      whileInView="visible"
+      viewport={viewportOnce}
+      variants={stagger}
+    >
+      <div className="max-w-[1200px] mx-auto px-6 md:px-10">
+        <motion.div variants={fadeUp}>
+          <span className="line-accent" />
+          <p className="text-xs font-medium tracking-[0.15em] uppercase mb-2" style={{ color: 'var(--fg-muted)' }}>
+            AI Engineering
+          </p>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-[-0.03em] leading-tight mb-16" style={{ color: 'var(--fg)' }}>
+            Building AI Agents
+          </h2>
+        </motion.div>
+
+        <div className="flex flex-col gap-24 md:gap-32">
+          {aiProjects.map((project, index) => (
+            <div 
+              key={project.title}
+              className={`flex flex-col md:flex-row items-center gap-12 md:gap-16 ${index % 2 !== 0 ? 'md:flex-row-reverse' : ''}`}
+            >
+              {/* Image */}
+              <motion.div 
+                variants={index % 2 === 0 ? slideInLeft : slideInRight} 
+                className="w-full md:w-3/5"
               >
-                <Github className="w-4 h-4" /> View on GitHub
-              </motion.a>
+                <div
+                  className="img-reveal w-full aspect-video group"
+                  style={{ border: '1px solid var(--border)' }}
+                >
+                  <Image
+                    src={project.image}
+                    alt={`${project.title} — AI implementation by Prestilien Pindoh`}
+                    width={720}
+                    height={405}
+                    className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105"
+                  />
+                </div>
+              </motion.div>
+
+              {/* Text */}
+              <motion.div 
+                variants={index % 2 === 0 ? slideInRight : slideInLeft} 
+                className="w-full md:w-2/5"
+              >
+                <h3 className="text-2xl sm:text-3xl font-bold mb-4" style={{ color: 'var(--fg)' }}>
+                  {project.title}
+                </h3>
+                <p className="text-base leading-[1.8] mb-6" style={{ color: 'var(--fg-secondary)' }}>
+                  {project.description}
+                </p>
+                <div className="flex flex-wrap gap-2 mb-8">
+                  {project.highlights.map(highlight => (
+                    <span 
+                      key={highlight}
+                      className="px-3 py-1 rounded-full text-xs font-medium"
+                      style={{ background: 'var(--tag-bg)', color: 'var(--fg)', border: '1px solid var(--border)' }}
+                    >
+                      {highlight}
+                    </span>
+                  ))}
+                </div>
+                <motion.a
+                  href={project.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-primary"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  {project.isGithub ? <Github size={16} /> : <ExternalLink size={16} />}
+                  {project.isGithub ? "View on GitHub" : "Visit Project"}
+                </motion.a>
+              </motion.div>
             </div>
+          ))}
         </div>
-        <div className="w-full md:w-3/5 flex justify-center">
-            <motion.div className="rounded-xl overflow-hidden border-2 border-transparent hover:border-[#38e07b] transition-colors duration-300 max-w-[720px] w-full aspect-video" initial={{ opacity: 0, scale: 0.98 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.5, ease: 'easeOut' }}>
-            <Image
-                src="/images/deepresearch-agent.png"
-                alt="DeepResearch Agent - LangChain, LangGraph and LangSmith implementation by Prestilien Pindoh"
-                width={720}
-                height={405}
-                className="w-full h-full object-contain"
-            />
-            </motion.div>
-        </div>
-        </div>
+      </div>
     </motion.section>
   )
 }

@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
-import { Geist_Mono, Lato } from "next/font/google";
+import { Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ChatWidget from "@/components/ChatWidget";
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/next';
+import ThemeProvider from "@/components/ThemeProvider";
 
-const lato = Lato({
-  variable: "--font-lato",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
-  weight: ["400", "700"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
 const geistMono = Geist_Mono({
@@ -30,18 +31,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body suppressHydrationWarning
-        className={`${lato.variable} ${geistMono.variable} antialiased`}
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={`${inter.variable} ${geistMono.variable} antialiased`}
       >
-        <div
-          className="relative flex size-full min-h-screen flex-col bg-[#0d1a12] dark group/design-root overflow-x-hidden"
-        >
-          {children}
-          <ChatWidget />
-          <SpeedInsights />
-          <Analytics />
-        </div>
+        <ThemeProvider>
+          <div className="noise-overlay relative flex size-full min-h-screen flex-col overflow-x-hidden">
+            {children}
+            <ChatWidget />
+            <SpeedInsights />
+            <Analytics />
+          </div>
+        </ThemeProvider>
       </body>
     </html>
   );
