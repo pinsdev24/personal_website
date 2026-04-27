@@ -15,6 +15,14 @@ type AIProject = {
 
 const aiProjects: AIProject[] = [
   {
+    title: "Ariadne AI",
+    description: "A sophisticated multi-agent career platform that automates job applications with surgical precision. It features a specialized pipeline of agents for semantic matching, hyper-personalized cover letter generation with human-in-the-loop feedback, and a web-scouting agent to discover the most relevant roles.",
+    image: "/images/ariadne-ai-cl.png",
+    link: "https://ariadne-production-cfea.up.railway.app/",
+    isGithub: false,
+    highlights: ["Multi-Agent Systems", "Human-in-the-Loop", "Semantic Matching"]
+  },
+  {
     title: "DeepResearch Agent",
     description: "I build production-grade AI agents that plan, act, and learn across complex workflows. Using LangChain for tool orchestration, LangGraph for reliable graph-based control over multi-step flows, and LangSmith for tracing and evaluation.",
     image: "/images/deepresearch-agent.png",
@@ -55,13 +63,13 @@ export default function BuildAIAgent() {
 
         <div className="flex flex-col gap-24 md:gap-32">
           {aiProjects.map((project, index) => (
-            <div 
+            <div
               key={project.title}
               className={`flex flex-col md:flex-row items-center gap-12 md:gap-16 ${index % 2 !== 0 ? 'md:flex-row-reverse' : ''}`}
             >
               {/* Image */}
-              <motion.div 
-                variants={index % 2 === 0 ? slideInLeft : slideInRight} 
+              <motion.div
+                variants={index % 2 === 0 ? slideInLeft : slideInRight}
                 className="w-full md:w-3/5"
               >
                 <div
@@ -79,8 +87,8 @@ export default function BuildAIAgent() {
               </motion.div>
 
               {/* Text */}
-              <motion.div 
-                variants={index % 2 === 0 ? slideInRight : slideInLeft} 
+              <motion.div
+                variants={index % 2 === 0 ? slideInRight : slideInLeft}
                 className="w-full md:w-2/5"
               >
                 <h3 className="text-2xl sm:text-3xl font-bold mb-4" style={{ color: 'var(--fg)' }}>
@@ -91,7 +99,7 @@ export default function BuildAIAgent() {
                 </p>
                 <div className="flex flex-wrap gap-2 mb-8">
                   {project.highlights.map(highlight => (
-                    <span 
+                    <span
                       key={highlight}
                       className="px-3 py-1 rounded-full text-xs font-medium"
                       style={{ background: 'var(--tag-bg)', color: 'var(--fg)', border: '1px solid var(--border)' }}

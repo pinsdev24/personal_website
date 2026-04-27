@@ -60,7 +60,7 @@ const projects: Project[] = [
     title: 'Afrik Delices',
     description: 'A culinary platform showcasing authentic African recipes, connecting food enthusiasts with traditional cooking from across the continent.',
     href: 'https://afrikdelices.com/',
-    tags: ['E-commerce', 'Full Stack'],
+    tags: ['Food', 'Mobile App', 'AI'],
   },
 ]
 

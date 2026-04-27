@@ -63,7 +63,7 @@ export default function Header() {
             className="text-lg font-semibold tracking-tight"
             style={{ color: 'var(--fg)' }}
           >
-            Prestilien Pindoh<span style={{ color: 'var(--fg-muted)' }}>.me</span>
+            prestilienpindoh<span style={{ color: 'var(--fg-muted)' }}>.me</span>
           </a>
 
           {/* Desktop nav */}
