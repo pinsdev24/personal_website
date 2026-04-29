@@ -23,12 +23,12 @@ const projects: Project[] = [
     tags: ['Machine Learning', 'Python', 'Data Science'],
   },
   {
-    src: '/images/flightbotai.png',
-    alt: 'Flight Booking Chatbot',
-    title: 'Flight Booking Chatbot',
-    description: 'Scalable Node.js backend with PostgreSQL optimization and a stateful chatbot with advanced NLP integration, reducing query times by 40%.',
-    href: 'https://flight-booking-chatbot.onrender.com/',
-    tags: ['Node.js', 'LLM', 'Next.js'],
+    src: '/images/fraud_detection.png',
+    alt: 'MLOps Fraud Detection',
+    title: 'MLOps Fraud Detection',
+    description: 'End-to-end industrialization of a bank anomaly detection model using XGBoost and MLflow. Features a production-ready FastAPI inference API, automated CI/CD pipelines, and isolated Docker architecture.',
+    href: 'https://github.com/pinsdev24/mlops-fraud-detection',
+    tags: ['MLOps', 'XGBoost', 'Python', 'Docker'],
   },
   {
     src: '/images/chest.jpeg',
@@ -41,18 +41,10 @@ const projects: Project[] = [
   {
     src: '/images/todomcp_langgraph.png',
     alt: 'Todo MCP Agent',
-    title: 'Todo MCP Server',
+    title: 'MCP Server',
     description: 'An MCP server built with Python, Pydantic and SQLite to manage personal todo lists, connected to a local MCP client.',
     href: 'https://github.com/pinsdev24/IntelligentSystemsLab/tree/main/ai-agent/todo-agent-mcp',
     tags: ['MCP', 'Python', 'AI Agent'],
-  },
-  {
-    src: '/images/valide_landing.png',
-    alt: 'Valide — Educational Platform',
-    title: 'Valide',
-    description: 'Educational platform revolutionizing learning in Cameroon through AI-powered assistance and comprehensive academic resources.',
-    href: 'https://valide237.web.app/',
-    tags: ['Full Stack', 'AI', 'Education'],
   },
   {
     src: '/images/afrikdelices.png',
@@ -61,6 +53,14 @@ const projects: Project[] = [
     description: 'A culinary platform showcasing authentic African recipes, connecting food enthusiasts with traditional cooking from across the continent.',
     href: 'https://afrikdelices.com/',
     tags: ['Food', 'Mobile App', 'AI'],
+  },
+  {
+    src: '/images/valide_landing.png',
+    alt: 'Valide — Educational Platform',
+    title: 'Valide',
+    description: 'Educational platform revolutionizing learning in Cameroon through AI-powered assistance and comprehensive academic resources.',
+    href: 'https://valide237.web.app/',
+    tags: ['Full Stack', 'AI', 'Education'],
   },
 ]
 
@@ -87,7 +87,7 @@ export default function FeaturedProjects() {
           </h2>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {projects.map((p, i) => (
             <motion.a
               key={p.title}

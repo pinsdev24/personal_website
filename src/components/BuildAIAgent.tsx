@@ -36,7 +36,7 @@ const aiProjects: AIProject[] = [
     image: "/images/studenthub.png",
     link: "https://studenthub-frontend.vercel.app/",
     isGithub: false,
-    highlights: ["RAG", "PDF Intelligence", "Academic AI"]
+    highlights: ["RAG", "PDF Processing", "Anti-Hallucination", "Academic AI"]
   }
 ]
 

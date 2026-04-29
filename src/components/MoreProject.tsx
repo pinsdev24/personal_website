@@ -52,7 +52,7 @@ export default function MoreProject() {
               whileHover={reduce ? {} : { scale: 1.02 }}
               whileTap={reduce ? {} : { scale: 0.98 }}
             >
-              View full portfolio
+              View my GitHub
               <ArrowUpRight size={16} />
             </motion.a>
           </motion.div>
