@@ -226,6 +226,8 @@ body {
   left: 1.5rem;
   z-index: 9998;
   width: min(480px, calc(100vw - 3rem));
+  max-height: calc(100dvh - 3rem);
+  overflow-y: auto;
   background: var(--card-bg);
   border: 1px solid var(--card-border);
   border-radius: var(--radius);
@@ -238,10 +240,12 @@ body {
 
 @media (max-width: 640px) {
   .cookie-banner {
-    left: 50%;
-    transform: translateX(-50%);
-    width: calc(100vw - 2rem);
-    bottom: 1rem;
+    left: 1rem;
+    right: 1rem;
+    width: auto;
+    bottom: max(1rem, env(safe-area-inset-bottom));
+    max-height: calc(100dvh - 6rem);
+    transform: none;
   }
 }
 
