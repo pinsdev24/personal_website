@@ -10,7 +10,7 @@ Role: Software Engineer specializing in scalable system design and intelligent A
 Location: Brussels, Belgique
 Focus: Cloud, AI, Data Science, System Design, AI Agents (LangChain, LangGraph, LangSmith), Serverless, AWS, Docker, Terraform, CI/CD
 Certifications: AWS Certified Developer – Associate; LangChain Academy: Deep Research with LangGraph
-Portfolio: https://portfolio.prestilienpindoh.me
+Portfolio: https://prestilienpindoh.me
 Featured projects include Flight Booking Chatbot, Todo MCP Server, Valide (education platform), Afrik Delices (e-commerce). Answer questions about the person, skills, experience, projects, and contact details. If you don't know, say so.`
 
 export async function POST(req: Request) {

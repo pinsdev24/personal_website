@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ChatWidget from "@/components/ChatWidget";
+import CookieBanner from "@/components/CookieBanner";
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/next';
 import ThemeProvider from "@/components/ThemeProvider";
@@ -39,6 +40,7 @@ export default function RootLayout({
           <div className="noise-overlay relative flex size-full min-h-screen flex-col overflow-x-hidden">
             {children}
             <ChatWidget />
+            <CookieBanner />
             <SpeedInsights />
             <Analytics />
           </div>
