@@ -70,7 +70,7 @@ export default function Contact() {
           {/* Contact info */}
           <motion.div variants={fadeUp} className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-10 mb-10">
             <a
-              href="mailto:prestilienpindoh@gmail.com"
+              href="mailto:prestilienpindoh@outlook.com"
               className="group flex items-center gap-3 transition-all duration-200"
               style={{ color: 'var(--fg)' }}
             >
@@ -81,7 +81,7 @@ export default function Contact() {
                 <Mail size={16} />
               </div>
               <span className="text-sm font-medium group-hover:underline underline-offset-4">
-                prestilienpindoh@gmail.com
+                prestilienpindoh@outlook.com
               </span>
             </a>
             <div className="flex items-center gap-3" style={{ color: 'var(--fg)' }}>
@@ -91,14 +91,14 @@ export default function Contact() {
               >
                 <MapPin size={16} />
               </div>
-              <span className="text-sm font-medium">Brussels, Belgium</span>
+              <span className="text-sm font-medium">Belgium</span>
             </div>
           </motion.div>
 
           {/* CTA */}
           <motion.div variants={fadeUp} className="mb-10">
             <motion.a
-              href="mailto:prestilienpindoh@gmail.com"
+              href="mailto:prestilienpindoh@outlook.com"
               className="btn-primary text-base"
               whileHover={reduce ? {} : { scale: 1.02 }}
               whileTap={reduce ? {} : { scale: 0.98 }}

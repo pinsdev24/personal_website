@@ -19,8 +19,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Prestilien Pindoh — Software Engineer | Cloud & AI",
-  description: "Portfolio of Prestilien Pindoh, Software Engineer specializing in scalable system design, cloud deployment, and intelligent AI integration.",
+  title: "Prestilien Pindoh — AI Engineer | Software & Cloud Architect",
+  description: "Portfolio of Prestilien Pindoh, AI Engineer specializing in building intelligent AI solutions and scalable systems. Turning complex challenges into elegant, production-grade software.",
   icons: {
     icon: "/images/profile.png",
   },
