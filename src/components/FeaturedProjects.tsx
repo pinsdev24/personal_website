@@ -59,7 +59,7 @@ const projects: Project[] = [
     alt: 'Valide — Educational Platform',
     title: 'Valide',
     description: 'Educational platform revolutionizing learning in Cameroon through AI-powered assistance and comprehensive academic resources.',
-    href: 'https://valide237.web.app/',
+    href: 'https://valide-startup.vercel.app',
     tags: ['Full Stack', 'AI', 'Education'],
   },
 ]
