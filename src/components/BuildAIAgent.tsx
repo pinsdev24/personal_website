@@ -18,7 +18,7 @@ const aiProjects: AIProject[] = [
     title: "Ariadne AI",
     description: "A sophisticated multi-agent career platform that automates job applications with surgical precision. It features a specialized pipeline of agents for semantic matching, hyper-personalized cover letter generation with human-in-the-loop feedback, and a web-scouting agent to discover the most relevant roles.",
     image: "/images/ariadne-ai-cl.png",
-    link: "https://ariadne-production-cfea.up.railway.app/",
+    link: "https://career-agent-production-be19.up.railway.app",
     isGithub: false,
     highlights: ["Multi-Agent Systems", "Human-in-the-Loop", "Semantic Matching"]
   },
