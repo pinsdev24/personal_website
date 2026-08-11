@@ -18,7 +18,7 @@ const experiences: ExperienceItem[] = [
   {
     company: 'Multitel',
     role: 'AI Engineer Intern',
-    period: 'Feb 2026 — Present',
+    period: 'Feb 2026 — Jun 2026',
     status: 'Current',
     summary: 'Internship focused on applied AI engineering, intelligent systems, and production-minded experimentation.',
     highlights: ['AI engineering', 'Reinforcement Learning', 'eXplainability (XRL)'],
@@ -43,7 +43,7 @@ const experiences: ExperienceItem[] = [
   {
     company: 'VALIDE',
     role: 'Co-founder & CTO',
-    period: '2021 — Present',
+    period: '2021 — 2025',
     summary: 'Co-founded an education platform and led technical decisions from early product architecture to AI-enabled learning experiences.',
     highlights: ['Technical strategy', 'Education tech', 'AI features'],
     logo: '/images/valide.png',

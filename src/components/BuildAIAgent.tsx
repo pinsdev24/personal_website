@@ -73,15 +73,15 @@ export default function BuildAIAgent() {
                 className="w-full md:w-3/5"
               >
                 <div
-                  className="img-reveal w-full aspect-video group"
+                  className="img-reveal w-full aspect-[2/1]"
                   style={{ border: '1px solid var(--border)' }}
                 >
                   <Image
                     src={project.image}
                     alt={`${project.title} — AI implementation by Prestilien Pindoh`}
                     width={720}
-                    height={405}
-                    className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105"
+                    height={360}
+                    className="w-full h-full object-cover"
                   />
                 </div>
               </motion.div>

@@ -2,7 +2,11 @@ import { generateText } from 'ai'
 import { google } from '@ai-sdk/google'
 import { db } from '@/db'
 import { chats, messages } from '@/db/schema'
-import { eq } from 'drizzle-orm'
+
+type IncomingMessage = {
+  role: string
+  content: string
+}
 
 const SITE_CONTEXT = `You are a helpful assistant for Prestilien Pindoh's personal site.
 Name: Prestilien Pindoh
@@ -11,14 +15,14 @@ Location: Brussels, Belgique
 Focus: Cloud, AI, Data Science, System Design, AI Agents (LangChain, LangGraph, LangSmith), Serverless, AWS, Docker, Terraform, CI/CD
 Certifications: AWS Certified Developer – Associate; LangChain Academy: Deep Research with LangGraph
 Portfolio: https://prestilienpindoh.me
-Featured projects include Flight Booking Chatbot, Todo MCP Server, Valide (education platform), Afrik Delices (e-commerce). Answer questions about the person, skills, experience, projects, and contact details. If you don't know, say so.`
+Featured projects include Afrik Delices (culinary platform), E-commerce Client Segmentation, MLOps Fraud Detection, Vente Pro (sales management platform), and Valide (education platform). Answer questions about the person, skills, experience, projects, and contact details. If you don't know, say so.`
 
 export async function POST(req: Request) {
   if (!process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
     return new Response('Missing GOOGLE_GENERATIVE_AI_API_KEY', { status: 500 })
   }
 
-  const body = await req.json()
+  const body = await req.json() as { messages: IncomingMessage[]; chatId?: string }
   const { messages: inputMessages, chatId: providedChatId } = body
 
   let chatId = providedChatId
@@ -42,8 +46,8 @@ export async function POST(req: Request) {
 
   // Sanitize messages for CoreMessage format
   const coreMessages = inputMessages
-    .filter((m: any) => m.role === 'user' || m.role === 'assistant')
-    .map((m: any) => ({ role: m.role, content: m.content }))
+    .filter((m): m is IncomingMessage & { role: 'user' | 'assistant' } => m.role === 'user' || m.role === 'assistant')
+    .map((m) => ({ role: m.role, content: m.content }))
 
   try {
     const result = await generateText({

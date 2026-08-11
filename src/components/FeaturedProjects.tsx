@@ -15,6 +15,14 @@ type Project = {
 
 const projects: Project[] = [
   {
+    src: '/images/afrikdelices.png',
+    alt: 'Afrik Delices',
+    title: 'Afrik Delices',
+    description: 'A culinary platform showcasing authentic African recipes, connecting food enthusiasts with traditional cooking from across the continent.',
+    href: 'https://afrikdelices.com/',
+    tags: ['Food', 'Mobile App', 'AI'],
+  },
+  {
     src: '/images/clustering_client.png',
     alt: 'E-commerce Client Segmentation',
     title: 'E-commerce Client Segmentation',
@@ -31,28 +39,12 @@ const projects: Project[] = [
     tags: ['MLOps', 'XGBoost', 'Python', 'Docker'],
   },
   {
-    src: '/images/chest.jpeg',
-    alt: 'Chest X-Ray Pneumonia Detection',
-    title: 'Chest X-Ray Pneumonia Detection',
-    description: 'AI-powered web application for detecting pneumonia from chest X-ray images using a fine-tuned ResNet18 model served via FastAPI.',
-    href: 'https://github.com/pinsdev24/chest-xray-app',
-    tags: ['Deep Learning', 'FastAPI', 'PyTorch'],
-  },
-  {
-    src: '/images/todomcp_langgraph.png',
-    alt: 'Todo MCP Agent',
-    title: 'MCP Server',
-    description: 'An MCP server built with Python, Pydantic and SQLite to manage personal todo lists, connected to a local MCP client.',
-    href: 'https://github.com/pinsdev24/IntelligentSystemsLab/tree/main/ai-agent/todo-agent-mcp',
-    tags: ['MCP', 'Python', 'AI Agent'],
-  },
-  {
-    src: '/images/afrikdelices.png',
-    alt: 'Afrik Delices',
-    title: 'Afrik Delices',
-    description: 'A culinary platform showcasing authentic African recipes, connecting food enthusiasts with traditional cooking from across the continent.',
-    href: 'https://afrikdelices.com/',
-    tags: ['Food', 'Mobile App', 'AI'],
+    src: '/images/vente-pro.png',
+    alt: 'Vente Pro dashboard',
+    title: 'Vente Pro',
+    description: 'Full-stack sales management platform with a FastAPI backend, SQLAlchemy data layer, PostgreSQL database, Cloudflare R2 storage, and GitHub Actions delivery pipeline.',
+    href: 'https://vente-pro-green.vercel.app/',
+    tags: ['FastAPI', 'SQLAlchemy', 'PostgreSQL', 'R2', 'GitHub Actions'],
   },
   {
     src: '/images/valide_landing.png',
@@ -88,7 +80,7 @@ export default function FeaturedProjects() {
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          {projects.map((p, i) => (
+          {projects.map((p) => (
             <motion.a
               key={p.title}
               href={p.href}
