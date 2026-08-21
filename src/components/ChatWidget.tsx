@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, type CSSProperties } from 'react'
 import { MessageCircle, X } from 'lucide-react'
 import { AnimatePresence, motion } from 'framer-motion'
 import ReactMarkdown from 'react-markdown'
@@ -79,9 +79,9 @@ export default function ChatWidget() {
   }, [open])
 
   const quickActions = [
-    { label: 'Skills', query: 'What are your core technical skills?' },
-    { label: 'Projects', query: 'Tell me about your latest projects.' },
-    { label: 'Contact', query: 'How can I contact you?' },
+    { label: 'Why Prestilien?', query: 'Why should an AI or software team hire Prestilien?' },
+    { label: 'AI work', query: 'Walk me through Prestilien’s strongest AI projects.' },
+    { label: 'Production stack', query: 'How does Prestilien build, deploy, and monitor production systems?' },
   ]
 
   return (
@@ -119,7 +119,7 @@ export default function ChatWidget() {
                 </div>
                 <div>
                   <p id="chat-title" className="text-sm font-bold tracking-tight" style={{ color: 'var(--fg)' }}>
-                    Assistant AI
+                    Ask about my work
                   </p>
                   <p className="text-[10px] font-medium uppercase tracking-wider opacity-50" style={{ color: 'var(--fg)' }}>
                     Online & Ready
@@ -140,7 +140,7 @@ export default function ChatWidget() {
               {messages.length === 0 && (
                 <div className="space-y-4">
                   <div className="text-sm leading-relaxed font-medium" style={{ color: 'var(--fg-secondary)' }}>
-                    Hi! I'm Prestilien's digital twin. How can I help you today?
+                    I can answer questions about Prestilien&apos;s projects, engineering approach, and experience.
                   </div>
                   <div className="grid grid-cols-1 gap-2">
                     {quickActions.map((action) => (
@@ -153,7 +153,7 @@ export default function ChatWidget() {
                         className="text-left text-xs px-4 py-2.5 rounded-xl border border-dashed transition-all hover:border-solid hover:bg-black/5 dark:hover:bg-white/5 active:scale-[0.98]"
                         style={{ borderColor: 'var(--border)', color: 'var(--fg-secondary)' }}
                       >
-                        {action.label}: <span className="opacity-60">"{action.query}"</span>
+                        {action.label}: <span className="opacity-60">“{action.query}”</span>
                       </button>
                     ))}
                   </div>
@@ -183,18 +183,6 @@ export default function ChatWidget() {
                         <div className="text-[13px] leading-relaxed chat-markdown">
                           <ReactMarkdown
                             remarkPlugins={[remarkGfm]}
-                            components={{
-                              ul: ({ node, ...props }: any) => <ul className="list-disc pl-4 mb-2 space-y-1" {...props} />,
-                              ol: ({ node, ...props }: any) => <ol className="list-decimal pl-4 mb-2 space-y-1" {...props} />,
-                              li: ({ node, ...props }: any) => <li className="" {...props} />,
-                              p: ({ node, ...props }: any) => <p className="mb-2 last:mb-0" {...props} />,
-                              a: ({ node, ...props }: any) => <a className="underline underline-offset-2 font-semibold" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit' }} {...props} />,
-                              strong: ({ node, ...props }: any) => <strong className="font-bold" style={{ color: 'inherit' }} {...props} />,
-                              h1: ({ node, ...props }: any) => <h1 className="text-base font-bold mb-2" style={{ color: 'inherit' }} {...props} />,
-                              h2: ({ node, ...props }: any) => <h2 className="text-sm font-bold mb-2" style={{ color: 'inherit' }} {...props} />,
-                              blockquote: ({ node, ...props }: any) => <blockquote className="pl-2 italic my-2 border-l-2 opacity-70" style={{ borderColor: 'currentColor' }} {...props} />,
-                              code: ({ node, ...props }: any) => <code className="rounded px-1.5 py-0.5 text-[11px] font-mono bg-black/10 dark:bg-white/20" {...props} />,
-                            }}
                           >
                             {m.content}
                           </ReactMarkdown>
@@ -273,9 +261,8 @@ export default function ChatWidget() {
                     background: 'var(--bg)',
                     color: 'var(--fg)',
                     border: '1px solid var(--border)',
-                    // @ts-ignore
                     '--tw-ring-color': 'rgba(var(--fg-rgb, 0,0,0), 0.1)'
-                  }}
+                  } as CSSProperties}
                 />
                 <button
                   type="submit"

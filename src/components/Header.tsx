@@ -5,16 +5,17 @@ import { useTheme } from './ThemeProvider'
 import { Sun, Moon, Menu, X } from 'lucide-react'
 
 const navLinks = [
-  { label: 'About', href: '#about' },
-  { label: 'Experience', href: '#experience' },
+  { label: 'AI work', href: '#ai-agents' },
   { label: 'Projects', href: '#featured-projects' },
-  { label: 'Skills', href: '#skills' },
+  { label: 'Experience', href: '#experience' },
+  { label: 'Stack', href: '#skills' },
   { label: 'Contact', href: '#contact' },
 ]
 
 export default function Header() {
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [active, setActive] = useState('')
   const { theme, toggle } = useTheme()
   const { scrollY } = useScroll()
 
@@ -46,6 +47,27 @@ export default function Header() {
     return () => document.removeEventListener('keydown', onKey)
   }, [])
 
+  useEffect(() => {
+    const sections = navLinks
+      .map((link) => document.querySelector(link.href))
+      .filter((el): el is HTMLElement => el instanceof HTMLElement)
+
+    if (sections.length === 0) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0]
+        if (visible?.target.id) setActive(`#${visible.target.id}`)
+      },
+      { rootMargin: '-28% 0px -58% 0px', threshold: [0, 0.2, 0.45] }
+    )
+
+    sections.forEach((section) => observer.observe(section))
+    return () => observer.disconnect()
+  }, [])
+
   return (
     <>
       <motion.header
@@ -69,19 +91,30 @@ export default function Header() {
 
           {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-8">
-            {navLinks.map(link => (
-              <a
-                key={link.href}
-                href={link.href}
-                onClick={(e) => navigate(e, link.href)}
-                className="text-sm font-medium transition-colors duration-200 hover:opacity-100"
-                style={{ color: 'var(--fg-secondary)', opacity: 0.8 }}
-                onMouseEnter={(e) => { (e.target as HTMLElement).style.color = 'var(--fg)'; (e.target as HTMLElement).style.opacity = '1' }}
-                onMouseLeave={(e) => { (e.target as HTMLElement).style.color = 'var(--fg-secondary)'; (e.target as HTMLElement).style.opacity = '0.8' }}
-              >
-                {link.label}
-              </a>
-            ))}
+            {navLinks.map(link => {
+              const isActive = active === link.href
+              return (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  onClick={(e) => navigate(e, link.href)}
+                  className="text-sm font-medium transition-opacity duration-200 hover:opacity-100"
+                  style={{
+                    color: isActive ? 'var(--fg)' : 'var(--fg-secondary)',
+                    opacity: isActive ? 1 : 0.8,
+                  }}
+                >
+                  {link.label}
+                </a>
+              )
+            })}
+            <a
+              href="mailto:prestilienpindoh@outlook.com"
+              className="btn-primary"
+              style={{ padding: '0.45rem 1.1rem', fontSize: '0.75rem' }}
+            >
+              Let&apos;s talk
+            </a>
             <button
               onClick={toggle}
               className="w-9 h-9 flex items-center justify-center rounded-full transition-all duration-200 cursor-pointer"
@@ -142,6 +175,16 @@ export default function Header() {
                 {link.label}
               </motion.a>
             ))}
+            <motion.a
+              href="mailto:prestilienpindoh@outlook.com"
+              className="btn-primary"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ delay: navLinks.length * 0.05, duration: 0.3 }}
+            >
+              Let&apos;s talk
+            </motion.a>
           </motion.div>
         )}
       </AnimatePresence>

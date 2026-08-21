@@ -19,8 +19,33 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Prestilien Pindoh — AI Engineer | Software & Cloud Architect",
-  description: "Portfolio of Prestilien Pindoh, AI Engineer specializing in building intelligent AI solutions and scalable systems. Turning complex challenges into elegant, production-grade software.",
+  metadataBase: new URL("https://prestilienpindoh.me"),
+  title: "Prestilien Pindoh — AI/ML & Software Engineer",
+  description: "AI/ML and software engineer building production agents, observable ML systems, cloud APIs, and end-to-end products.",
+  keywords: [
+    "AI Engineer",
+    "Machine Learning Engineer",
+    "Software Engineer",
+    "MLOps",
+    "LangGraph",
+    "RAG",
+    "AWS",
+    "Brussels",
+  ],
+  openGraph: {
+    title: "Prestilien Pindoh — AI/ML & Software Engineer",
+    description: "Production AI, observable ML systems, cloud delivery, and product ownership.",
+    url: "/",
+    siteName: "Prestilien Pindoh",
+    type: "website",
+    images: [{ url: "/images/profile_image.jpg", alt: "Prestilien Pindoh" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Prestilien Pindoh — AI/ML & Software Engineer",
+    description: "Production AI, observable ML systems, cloud delivery, and product ownership.",
+    images: ["/images/profile_image.jpg"],
+  },
   icons: {
     icon: "/images/profile.png",
   },

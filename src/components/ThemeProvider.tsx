@@ -14,17 +14,19 @@ const ThemeContext = createContext<{
 export const useTheme = () => useContext(ThemeContext)
 
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>('light')
+  const [theme, setTheme] = useState<Theme>(() => {
+    if (typeof window === 'undefined') return 'light'
+    const stored = localStorage.getItem('theme') as Theme | null
+    const preferred = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    return stored ?? preferred
+  })
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    const stored = localStorage.getItem('theme') as Theme | null
-    const preferred = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-    const initial = stored ?? preferred
-    setTheme(initial)
-    document.documentElement.setAttribute('data-theme', initial)
-    setMounted(true)
-  }, [])
+    document.documentElement.setAttribute('data-theme', theme)
+    const frame = window.requestAnimationFrame(() => setMounted(true))
+    return () => window.cancelAnimationFrame(frame)
+  }, [theme])
 
   const toggle = useCallback(() => {
     setTheme(prev => {

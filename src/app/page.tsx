@@ -1,13 +1,11 @@
 import Header from "@/components/Header";
 import FeaturedProjects from "@/components/FeaturedProjects";
 import Hero from "@/components/Hero";
-import About from "@/components/About";
 import Experience from "@/components/Experience";
 import Skills from "@/components/Skills";
 import Certification from "@/components/Certification";
 import Contact from "@/components/Contact";
 import BuildAIAgent from "@/components/BuildAIAgent";
-import MoreProject from "@/components/MoreProject";
 
 export default function Home() {
   return (
@@ -15,11 +13,9 @@ export default function Home() {
       <Header />
       <main className="flex-1">
         <Hero />
-        <About />
-        <Experience />
         <BuildAIAgent />
         <FeaturedProjects />
-        <MoreProject />
+        <Experience />
         <Skills />
         <Certification />
         <Contact />

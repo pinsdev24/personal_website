@@ -3,7 +3,7 @@ import Image from 'next/image'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useConversation } from '@elevenlabs/react'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
-import { ArrowDown, Mic, PhoneOff, Loader2 } from 'lucide-react'
+import { ArrowRight, Mic, PhoneOff, Loader2, MapPin } from 'lucide-react'
 import { fadeUp, stagger } from '@/lib/animations'
 
 /* ────────────────────────────────────────────────
@@ -183,7 +183,7 @@ export default function Hero() {
   const [agentIdMissing, setAgentIdMissing] = useState(false)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [micMuted, setMicMuted] = useState(false)
+  const [micMuted] = useState(false)
   const errorTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   const language = useMemo(() => {
@@ -263,302 +263,282 @@ export default function Hero() {
 
   return (
     <motion.section
-      className="relative min-h-[100svh] flex flex-col items-center justify-center px-6 md:px-10 pt-20 overflow-hidden"
+      id="home"
+      className="relative min-h-[100svh] flex items-center overflow-hidden px-6 md:px-10 pt-24 pb-12"
       initial="hidden"
       animate="visible"
       variants={stagger}
     >
-      {/* Immersive wave field background */}
       <WaveField voiceState={voiceState} reduce={!!reduce} />
 
-      <div className="relative z-10 max-w-[800px] mx-auto text-center flex flex-col items-center gap-6">
-        {/* Profile image */}
-        <motion.div variants={fadeUp} className="relative">
-          <div
-            className="w-24 h-24 md:w-28 md:h-28 rounded-full overflow-hidden"
-            style={{ border: '2px solid var(--border)' }}
-          >
-            <Image
-              src="/images/bw.jpg"
-              alt="Prestilien Pindoh"
-              width={112}
-              height={112}
-              className="w-full h-full object-cover"
-              priority
-            />
+      <div className="relative z-10 w-full max-w-[1200px] mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.12fr_0.88fr] gap-12 lg:gap-16 items-center">
+          <div>
+            <motion.div variants={fadeUp} className="inline-flex items-center gap-2 mb-7">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-50 animate-ping" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+              </span>
+              <span className="text-xs font-semibold tracking-[0.12em] uppercase" style={{ color: 'var(--fg-muted)' }}>
+                Open to AI/ML & software roles
+              </span>
+            </motion.div>
+
+            <motion.div variants={fadeUp} className="flex items-center gap-3 mb-5">
+              <div className="w-11 h-11 rounded-full overflow-hidden" style={{ border: '1px solid var(--border)' }}>
+                <Image
+                  src="/images/bw.jpg"
+                  alt="Prestilien Pindoh"
+                  width={44}
+                  height={44}
+                  className="w-full h-full object-cover"
+                  priority
+                />
+              </div>
+              <div>
+                <p className="text-sm font-semibold" style={{ color: 'var(--fg)' }}>Prestilien Pindoh</p>
+                <p className="flex items-center gap-1.5 text-xs mt-0.5" style={{ color: 'var(--fg-muted)' }}>
+                  <MapPin size={12} /> Brussels, Belgium · Remote
+                </p>
+              </div>
+            </motion.div>
+
+            <motion.h1
+              variants={fadeUp}
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-[4.25rem] font-bold leading-[1.02] tracking-[-0.045em] max-w-[760px]"
+              style={{ color: 'var(--fg)' }}
+            >
+              I build AI systems
+              <span className="block" style={{ color: 'var(--fg-muted)' }}>that survive production.</span>
+            </motion.h1>
+
+            <motion.p
+              variants={fadeUp}
+              className="text-base sm:text-lg leading-[1.75] max-w-[650px] mt-6"
+              style={{ color: 'var(--fg-secondary)' }}
+            >
+              AI/ML and software engineer owning the path from model and agent architecture
+              to cloud delivery, evaluation, and observability.
+            </motion.p>
+
+            <motion.div variants={fadeUp} className="flex flex-wrap gap-2 mt-6">
+              {['Agentic AI', 'Machine Learning', 'MLOps', 'Cloud', 'Observability'].map((item) => (
+                <span
+                  key={item}
+                  className="px-3 py-1.5 rounded-full text-xs font-medium"
+                  style={{ background: 'var(--tag-bg)', border: '1px solid var(--tag-border)', color: 'var(--tag-fg)' }}
+                >
+                  {item}
+                </span>
+              ))}
+            </motion.div>
+
+            <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-3 mt-8">
+              <motion.a
+                href="#ai-agents"
+                className="btn-primary"
+                whileHover={reduce ? {} : { scale: 1.02 }}
+                whileTap={reduce ? {} : { scale: 0.98 }}
+              >
+                Explore my AI work <ArrowRight size={16} />
+              </motion.a>
+              <motion.a
+                href="mailto:prestilienpindoh@outlook.com"
+                className="btn-secondary"
+                whileHover={reduce ? {} : { scale: 1.02 }}
+                whileTap={reduce ? {} : { scale: 0.98 }}
+              >
+                Start a conversation
+              </motion.a>
+            </motion.div>
+
+            <motion.div variants={fadeUp} className="flex items-center gap-5 mt-6 text-xs font-medium">
+              <a
+                href="https://github.com/pinsdev24"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline-offset-4 hover:underline"
+                style={{ color: 'var(--fg-muted)' }}
+              >
+                GitHub
+              </a>
+              <a
+                href="https://www.linkedin.com/in/prestilien-djionang-pindoh-a21179255"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline-offset-4 hover:underline"
+                style={{ color: 'var(--fg-muted)' }}
+              >
+                LinkedIn
+              </a>
+            </motion.div>
           </div>
-          <div
-            className="absolute bottom-0.5 right-0.5 w-5 h-5 rounded-full flex items-center justify-center"
-            style={{ background: 'var(--bg)', border: '2px solid var(--bg)' }}
+
+          <motion.aside
+            variants={fadeUp}
+            className="relative rounded-3xl p-6 sm:p-8 min-h-[420px] flex flex-col"
+            style={{
+              background: 'rgba(var(--card-bg-rgb), 0.72)',
+              border: '1px solid var(--card-border)',
+              backdropFilter: 'blur(16px)',
+            }}
           >
-            <div className="w-3 h-3 rounded-full bg-emerald-500" />
-          </div>
-        </motion.div>
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-[10px] font-semibold tracking-[0.16em] uppercase" style={{ color: 'var(--fg-muted)' }}>
+                  Live portfolio interface
+                </p>
+                <h2 className="text-xl font-semibold mt-2" style={{ color: 'var(--fg)' }}>Ask me, don&apos;t just read.</h2>
+              </div>
+              <span className="px-2.5 py-1 rounded-full text-[10px] font-semibold" style={{ background: 'var(--tag-bg)', border: '1px solid var(--tag-border)', color: 'var(--fg-muted)' }}>
+                Voice AI
+              </span>
+            </div>
+            <p className="text-sm leading-relaxed mt-3 max-w-[360px]" style={{ color: 'var(--fg-secondary)' }}>
+              Ask about my projects, architecture choices, experience, or the kind of problems I want to solve next.
+            </p>
 
-        {/* Headline */}
-        <motion.h1
-          variants={fadeUp}
-          className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.05] tracking-[-0.03em]"
-          style={{ color: 'var(--fg)' }}
-        >
-          AI Engineer{' '}
-          <br className="hidden sm:block" />
-          <span style={{ color: 'var(--fg-muted)' }}>Software & Cloud</span>
-        </motion.h1>
-
-        {/* Subtitle */}
-        <motion.p
-          variants={fadeUp}
-          className="text-base sm:text-lg md:text-xl leading-relaxed max-w-[560px]"
-          style={{ color: 'var(--fg-secondary)' }}
-        >
-          Building intelligent AI solutions and scalable systems.
-          Turning complex challenges into elegant, production-grade software.
-        </motion.p>
-
-        {/* ── Premium Voice Orb ── */}
-        <motion.div variants={fadeUp} className="flex flex-col items-center gap-5 pt-4">
-
-          {/* Orb stack — fixed 140×140 container */}
-          <div className="relative flex items-center justify-center" style={{ width: 140, height: 140 }}>
-
-            {/* Layer 1 — slow-rotating dashed orbit */}
-            <motion.div
-              className="absolute inset-0 rounded-full"
-              style={{ border: '1px dashed var(--border)' }}
-              animate={!reduce ? { rotate: 360 } : {}}
-              transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
-            />
-
-            {/* Layer 2 — inner ring, pulses opacity when speaking */}
-            <motion.div
-              className="absolute rounded-full"
-              style={{ inset: 10, border: '1px solid var(--border)' }}
-              animate={
-                speaking && !reduce
-                  ? { opacity: [0.3, 0.8, 0.3] }
-                  : { opacity: connected ? 0.5 : 0.2 }
-              }
-              transition={{ duration: 1.2, repeat: speaking ? Infinity : 0, ease: 'easeInOut' }}
-            />
-
-            {/* Layer 3 — expanding ripples when connected */}
-            <AnimatePresence>
-              {connected && !reduce && (
-                <>
-                  {[0, 1, 2].map((i) => (
+            <div className="flex-1 flex flex-col items-center justify-center gap-5 py-8">
+              <div className="relative flex items-center justify-center w-40 h-40">
+                <motion.div
+                  className="absolute inset-0 rounded-full"
+                  style={{ border: '1px dashed var(--border)' }}
+                  animate={!reduce ? { rotate: 360 } : {}}
+                  transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
+                />
+                <motion.div
+                  className="absolute rounded-full"
+                  style={{ inset: 12, border: '1px solid var(--border)' }}
+                  animate={speaking && !reduce ? { opacity: [0.3, 0.8, 0.3] } : { opacity: connected ? 0.5 : 0.2 }}
+                  transition={{ duration: 1.2, repeat: speaking ? Infinity : 0, ease: 'easeInOut' }}
+                />
+                <AnimatePresence>
+                  {connected && !reduce && [0, 1, 2].map((i) => (
                     <motion.div
                       key={`ripple-${i}`}
                       className="absolute rounded-full pointer-events-none"
-                      style={{ inset: 20, border: '1px solid var(--fg)' }}
+                      style={{ inset: 24, border: '1px solid var(--fg)' }}
                       initial={{ scale: 1, opacity: speaking ? 0.22 : 0.12 }}
-                      animate={{
-                        scale: speaking ? 2.8 + i * 0.4 : 2.1 + i * 0.35,
-                        opacity: 0,
-                      }}
+                      animate={{ scale: speaking ? 2.5 + i * 0.35 : 2 + i * 0.3, opacity: 0 }}
                       transition={{
-                        duration: speaking ? 1.2 : 2.0,
+                        duration: speaking ? 1.2 : 2,
                         repeat: Infinity,
                         delay: i * (speaking ? 0.32 : 0.6),
                         ease: 'easeOut',
                       }}
                     />
                   ))}
-                </>
-              )}
-            </AnimatePresence>
+                </AnimatePresence>
+                <motion.button
+                  onClick={connected ? stop : start}
+                  disabled={busy || agentIdMissing}
+                  className="absolute rounded-full cursor-pointer disabled:cursor-not-allowed disabled:opacity-40 flex items-center justify-center overflow-hidden"
+                  style={{
+                    inset: 24,
+                    background: connected ? 'var(--accent)' : 'var(--card-bg)',
+                    color: connected ? 'var(--accent-fg)' : 'var(--fg)',
+                    border: '1px solid var(--card-border)',
+                    boxShadow: connected ? '0 0 36px rgba(var(--fg-rgb), 0.14)' : 'var(--shadow-md)',
+                  }}
+                  whileHover={reduce ? {} : { scale: 1.06 }}
+                  whileTap={reduce ? {} : { scale: 0.94 }}
+                  animate={speaking && !reduce ? { scale: [1, 1.055, 1] } : { scale: 1 }}
+                  transition={{ duration: 1.1, repeat: speaking ? Infinity : 0, ease: 'easeInOut' }}
+                  aria-label={connected ? 'End voice conversation' : 'Start voice conversation'}
+                >
+                  <AnimatePresence mode="wait">
+                    {busy ? (
+                      <motion.span key="loader" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                        <Loader2 className="w-6 h-6 animate-spin" />
+                      </motion.span>
+                    ) : connected ? (
+                      <motion.span key="bars" className="flex items-end justify-center gap-[3px]" style={{ height: 26 }}>
+                        {[0.4, 0.7, 1, 0.85, 1, 0.7, 0.4].map((peak, i) => (
+                          <motion.span
+                            key={i}
+                            className="block w-[3px] rounded-full"
+                            style={{ background: 'var(--accent-fg)', minHeight: 4 }}
+                            animate={speaking && !reduce ? { height: [6, peak * 24, 8, peak * 20, 6] } : { height: 6 }}
+                            transition={{ duration: 0.85 + i * 0.06, repeat: speaking ? Infinity : 0, delay: i * 0.07 }}
+                          />
+                        ))}
+                      </motion.span>
+                    ) : (
+                      <motion.span key="mic" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                        <Mic className="w-6 h-6" />
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
+                </motion.button>
+              </div>
 
-            {/* Layer 4 — the core orb button (inset 20 from container = 50px radius) */}
-            <motion.button
-              onClick={connected ? stop : start}
-              disabled={busy || agentIdMissing}
-              className="absolute rounded-full cursor-pointer disabled:cursor-not-allowed disabled:opacity-40 flex items-center justify-center overflow-hidden"
-              style={{
-                inset: 20,
-                background: connected ? 'var(--accent)' : 'var(--card-bg)',
-                color: connected ? 'var(--accent-fg)' : 'var(--fg)',
-                border: '1px solid var(--card-border)',
-                boxShadow: connected
-                  ? speaking
-                    ? '0 0 48px rgba(var(--fg-rgb), 0.20), 0 0 80px rgba(var(--fg-rgb), 0.08)'
-                    : '0 0 28px rgba(var(--fg-rgb), 0.12)'
-                  : 'var(--shadow-md)',
-                transition: 'background 0.45s cubic-bezier(0.4,0,0.2,1), box-shadow 0.45s, color 0.45s',
-              }}
-              whileHover={reduce ? {} : { scale: 1.08 }}
-              whileTap={reduce ? {} : { scale: 0.91 }}
-              animate={speaking && !reduce ? { scale: [1, 1.055, 1] } : { scale: 1 }}
-              transition={{ duration: 1.1, repeat: speaking ? Infinity : 0, ease: 'easeInOut' }}
-              aria-label={connected ? 'End voice conversation' : 'Start voice conversation'}
-            >
-              <AnimatePresence mode="wait">
-                {busy ? (
-                  <motion.span key="loader"
-                    initial={{ opacity: 0, scale: 0.7 }} animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.7 }} transition={{ duration: 0.18 }}
-                  >
-                    <Loader2 className="w-6 h-6 animate-spin" />
-                  </motion.span>
+              <motion.p
+                className="text-[11px] font-semibold tracking-[0.14em] uppercase"
+                style={{ color: 'var(--fg-muted)' }}
+                animate={speaking && !reduce ? { opacity: [0.5, 1, 0.5] } : { opacity: 1 }}
+                transition={{ duration: 1.4, repeat: speaking ? Infinity : 0 }}
+              >
+                {orbLabel}
+              </motion.p>
 
-                ) : connected ? (
-                  /* Audio bar visualizer — replaces static icon */
-                  <motion.span
-                    key="bars"
-                    initial={{ opacity: 0, scale: 0.7 }} animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.7 }} transition={{ duration: 0.2 }}
-                    className="flex items-end justify-center gap-[3px]"
-                    style={{ height: 26 }}
+              <AnimatePresence>
+                {connected && (
+                  <motion.button
+                    onClick={stop}
+                    disabled={busy}
+                    initial={{ opacity: 0, y: 5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 5 }}
+                    className="btn-secondary disabled:opacity-40 cursor-pointer"
+                    style={{ padding: '0.45rem 1.1rem', fontSize: '0.72rem' }}
                   >
-                    {[0.4, 0.7, 1, 0.85, 1, 0.7, 0.4].map((peak, i) => (
-                      <motion.span
-                        key={i}
-                        className="block w-[3px] rounded-full"
-                        style={{ background: 'var(--accent-fg)', minHeight: 4 }}
-                        animate={
-                          speaking && !reduce
-                            ? { height: [6, peak * 24, 8, peak * 20, 6] }
-                            : { height: 6 }
-                        }
-                        transition={{
-                          duration: 0.85 + i * 0.06,
-                          repeat: speaking ? Infinity : 0,
-                          delay: i * 0.07,
-                          ease: 'easeInOut',
-                        }}
-                      />
-                    ))}
-                  </motion.span>
-
-                ) : (
-                  <motion.span key="mic"
-                    initial={{ opacity: 0, scale: 0.7 }} animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.7 }} transition={{ duration: 0.18 }}
-                  >
-                    <Mic className="w-6 h-6" />
-                  </motion.span>
+                    <PhoneOff size={12} /> End call
+                  </motion.button>
                 )}
               </AnimatePresence>
-            </motion.button>
-          </div>
+              <AnimatePresence>
+                {error && (
+                  <motion.p
+                    initial={{ opacity: 0, y: 5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 5 }}
+                    className="rounded-full px-3 py-1.5 text-xs"
+                    style={{ background: 'var(--tag-bg)', border: '1px solid var(--border)', color: 'var(--fg)' }}
+                  >
+                    {error}
+                  </motion.p>
+                )}
+              </AnimatePresence>
+            </div>
 
-          {/* Label row */}
-          <div className="flex flex-col items-center gap-2.5">
-            <motion.p
-              className="text-[11px] font-semibold tracking-[0.14em] uppercase"
-              style={{ color: 'var(--fg-muted)' }}
-              animate={speaking && !reduce ? { opacity: [0.5, 1, 0.5] } : { opacity: 1 }}
-              transition={{ duration: 1.4, repeat: speaking ? Infinity : 0, ease: 'easeInOut' }}
-            >
-              {orbLabel}
-            </motion.p>
+            <div className="flex items-center justify-between gap-4 pt-4 text-[10px] font-medium uppercase tracking-[0.12em]" style={{ borderTop: '1px solid var(--border)', color: 'var(--fg-muted)' }}>
+              <span>Real-time voice</span>
+              <span>ElevenLabs</span>
+            </div>
+          </motion.aside>
+        </div>
 
-            {/* End call pill — slides in only when connected */}
-            <AnimatePresence>
-              {connected && (
-                <motion.button
-                  onClick={stop}
-                  disabled={busy}
-                  initial={{ opacity: 0, y: 5, scale: 0.92 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 5, scale: 0.92 }}
-                  transition={{ duration: 0.22 }}
-                  className="btn-secondary disabled:opacity-40 cursor-pointer"
-                  style={{ padding: '0.45rem 1.25rem', fontSize: '0.75rem', gap: '0.4rem' }}
-                  whileHover={reduce ? {} : { scale: 1.04 }}
-                  whileTap={reduce ? {} : { scale: 0.96 }}
-                  aria-label="End voice conversation"
-                >
-                  <PhoneOff size={12} />
-                  End call
-                </motion.button>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* Error toast */}
-          <AnimatePresence>
-            {error && (
-              <motion.p
-                initial={{ opacity: 0, y: 6, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 6, scale: 0.95 }}
-                className="rounded-full px-4 py-2 text-xs font-medium"
-                style={{ background: 'var(--tag-bg)', border: '1px solid var(--border)', color: 'var(--fg)' }}
-              >
-                {error}
-              </motion.p>
-            )}
-          </AnimatePresence>
-        </motion.div>
-
-        {/* CTAs */}
-        <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-3 pt-2">
-          <motion.a
-            href="#featured-projects"
-            className="btn-primary"
-            whileHover={reduce ? {} : { scale: 1.02 }}
-            whileTap={reduce ? {} : { scale: 0.98 }}
-            onClick={(e) => {
-              e.preventDefault()
-              const el = document.querySelector('#featured-projects')
-              if (el) el.scrollIntoView({ behavior: 'smooth' })
-            }}
-          >
-            View my work
-          </motion.a>
-          <motion.a
-            href="#contact"
-            className="btn-secondary"
-            whileHover={reduce ? {} : { scale: 1.02 }}
-            whileTap={reduce ? {} : { scale: 0.98 }}
-            onClick={(e) => {
-              e.preventDefault()
-              const el = document.querySelector('#contact')
-              if (el) el.scrollIntoView({ behavior: 'smooth' })
-            }}
-          >
-            Get in touch
-          </motion.a>
-        </motion.div>
-
-        {/* AWS Badge */}
-        <motion.a
-          variants={fadeUp}
-          href="https://www.credly.com/badges/a20ef315-4458-4d29-9639-112695053779/public_url"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-3 mt-2 px-4 py-2 rounded-full transition-all duration-300"
-          style={{ background: 'var(--tag-bg)', border: '1px solid var(--tag-border)' }}
-          whileHover={reduce ? {} : { scale: 1.02 }}
-        >
-          <Image
-            src="/images/aws-certified-developer-associate.png"
-            alt="AWS Certified Developer - Associate"
-            width={32}
-            height={32}
-            className="w-8 h-8 rounded-full"
-          />
-          <span className="text-xs font-medium" style={{ color: 'var(--fg-secondary)' }}>
-            AWS Certified Developer — Associate
-          </span>
-        </motion.a>
-      </div>
-
-      {/* Scroll indicator */}
-      <motion.div
-        className="absolute bottom-8 left-1/2 -translate-x-1/2"
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.5, duration: 0.6 }}
-      >
         <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
-          style={{ color: 'var(--fg-muted)' }}
+          variants={fadeUp}
+          className="grid grid-cols-1 sm:grid-cols-3 gap-px mt-12 lg:mt-14 rounded-2xl overflow-hidden"
+          style={{ border: '1px solid var(--border)', background: 'var(--border)' }}
         >
-          <ArrowDown size={20} />
+          {[
+            ['AWS certified', 'Cloud-native delivery'],
+            ['Founder & CTO', 'Product ownership'],
+            ['Build → deploy → observe', 'Production mindset'],
+          ].map(([title, caption]) => (
+            <div
+              key={title}
+              className="px-5 py-4"
+              style={{ background: 'var(--card-bg)' }}
+            >
+              <p className="text-sm font-semibold" style={{ color: 'var(--fg)' }}>{title}</p>
+              <p className="text-xs mt-1" style={{ color: 'var(--fg-muted)' }}>{caption}</p>
+            </div>
+          ))}
         </motion.div>
-      </motion.div>
+      </div>
     </motion.section>
   )
 }

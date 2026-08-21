@@ -10,8 +10,11 @@ export default function CookieBanner() {
   const [showDetails, setShowDetails] = useState(false)
 
   useEffect(() => {
-    const stored = localStorage.getItem('cookie-consent') as ConsentState | null
-    setConsent(stored ?? 'pending')
+    const timer = window.setTimeout(() => {
+      const stored = localStorage.getItem('cookie-consent') as ConsentState | null
+      setConsent(stored ?? 'pending')
+    }, 0)
+    return () => window.clearTimeout(timer)
   }, [])
 
   const handleAccept = () => {
