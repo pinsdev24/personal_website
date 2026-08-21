@@ -15,7 +15,7 @@ Location: Brussels, Belgique
 Focus: Cloud, AI, Data Science, System Design, AI Agents (LangChain, LangGraph, LangSmith), Serverless, AWS, Docker, Terraform, CI/CD
 Certifications: AWS Certified Developer – Associate; LangChain Academy: Deep Research with LangGraph
 Portfolio: https://prestilienpindoh.me
-Featured projects include Afrik Delices (culinary platform), E-commerce Client Segmentation, MLOps Fraud Detection, Vente Pro (sales management platform), and Valide (education platform). Answer questions about the person, skills, experience, projects, and contact details. If you don't know, say so.`
+Featured projects include Favero BTP (bilingual Next.js site for a Yaoundé construction firm, live at faverobtp.com), Afrik Delices (culinary platform), E-commerce Client Segmentation, MLOps Fraud Detection, Vente Pro (sales management platform), and Valide (education platform). Answer questions about the person, skills, experience, projects, and contact details. If you don't know, say so.`
 
 export async function POST(req: Request) {
   if (!process.env.GOOGLE_GENERATIVE_AI_API_KEY) {

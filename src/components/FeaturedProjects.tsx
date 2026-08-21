@@ -15,6 +15,14 @@ type Project = {
 
 const projects: Project[] = [
   {
+    src: '/images/faverobtp.png',
+    alt: 'Favero BTP website hero',
+    title: 'Favero BTP',
+    description: 'A general contractor in Yaoundé delivering villas, buildings, and public works — from design to handover, with finishes built for Cameroon\'s climate.',
+    href: 'https://www.faverobtp.com',
+    tags: ['Next.js', 'i18n', 'Tailwind CSS', 'UI/UX'],
+  },
+  {
     src: '/images/afrikdelices.png',
     alt: 'Afrik Delices',
     title: 'Afrik Delices',
