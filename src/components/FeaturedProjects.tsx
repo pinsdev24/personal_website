@@ -40,16 +40,6 @@ const featured: Project[] = [
 
 const more: Project[] = [
   {
-    src: '/images/vente-pro.png',
-    alt: 'Vente Pro dashboard',
-    kind: 'Business software',
-    title: 'Vente Pro',
-    description: 'Sales operations software spanning APIs, relational data, object storage, and automated delivery.',
-    signal: 'Full-stack ownership',
-    href: 'https://vente-pro-green.vercel.app/',
-    tags: ['FastAPI', 'PostgreSQL', 'CI/CD'],
-  },
-  {
     src: '/images/afrikdelices.png',
     alt: 'Afrik Delices',
     kind: 'Product engineering',
@@ -78,6 +68,16 @@ const more: Project[] = [
     signal: 'Live production client',
     href: 'https://www.faverobtp.com',
     tags: ['Next.js', 'i18n', 'Tailwind CSS'],
+  },
+  {
+    src: '/images/vente-pro.png',
+    alt: 'Vente Pro dashboard',
+    kind: 'Business software',
+    title: 'Vente Pro',
+    description: 'Sales operations software spanning APIs, relational data, object storage, and automated delivery.',
+    signal: 'Full-stack ownership',
+    href: 'https://vente-pro-green.vercel.app/',
+    tags: ['FastAPI', 'PostgreSQL', 'CI/CD'],
   },
 ]
 
