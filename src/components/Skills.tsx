@@ -1,6 +1,6 @@
 "use client"
 import { motion } from 'framer-motion'
-import { Activity, Boxes, CloudUpload, Network } from 'lucide-react'
+import { Activity, Boxes, CloudUpload, Code2, Network } from 'lucide-react'
 import { fadeUp, stagger, viewportOnce } from '@/lib/animations'
 
 const deliveryStages = [
@@ -96,6 +96,41 @@ export default function Skills() {
               </div>
             )
           })}
+        </motion.div>
+
+        <motion.div
+          variants={fadeUp}
+          className="grid grid-cols-1 md:grid-cols-[auto_1fr_auto] gap-4 md:gap-6 items-start md:items-center mt-5 rounded-2xl p-5 sm:p-6"
+          style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)' }}
+        >
+          <div
+            className="w-10 h-10 rounded-xl flex items-center justify-center"
+            style={{ background: 'var(--tag-bg)', border: '1px solid var(--tag-border)', color: 'var(--fg)' }}
+          >
+            <Code2 size={17} />
+          </div>
+          <div>
+            <p className="text-[10px] font-semibold tracking-[0.14em] uppercase" style={{ color: 'var(--fg-muted)' }}>
+              AI-native workflow
+            </p>
+            <h3 className="text-base font-semibold mt-1.5" style={{ color: 'var(--fg)' }}>
+              Faster iteration, with engineering judgment intact.
+            </h3>
+            <p className="text-sm leading-relaxed mt-2 max-w-[760px]" style={{ color: 'var(--fg-secondary)' }}>
+              I use Cursor, Claude, and OpenAI across research, implementation, debugging, code review, and documentation—while tests, observability, and human review remain the quality gates.
+            </p>
+          </div>
+          <div className="flex gap-2 md:justify-end">
+            {['Cursor', 'Claude', 'OpenAI'].map(tool => (
+              <span
+                key={tool}
+                className="px-3 py-1.5 rounded-full text-xs font-medium"
+                style={{ background: 'var(--tag-bg)', border: '1px solid var(--tag-border)', color: 'var(--tag-fg)' }}
+              >
+                {tool}
+              </span>
+            ))}
+          </div>
         </motion.div>
 
         <motion.div variants={fadeUp} className="flex items-center gap-3 mt-12 mb-7">

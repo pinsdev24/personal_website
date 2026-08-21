@@ -16,6 +16,7 @@ Positioning: Prestilien owns the path from model and agent architecture to APIs,
 Focus: Agentic AI, RAG, Machine Learning, MLOps, System Design, Cloud, and Observability
 Core stack: Python, PyTorch, TorchRL, XGBoost, LangChain, LangGraph, FastAPI, MLflow, AWS, Docker, Terraform, CI/CD, TypeScript, Next.js, PostgreSQL
 Observability toolkit: Prometheus, Sentry, Langfuse, LangSmith, structured logging, metrics, tracing, and LLM evaluation
+AI-native workflow: Cursor, Claude, and OpenAI for research, implementation, debugging, code review, and documentation, with tests, observability, human review, and engineering judgment as quality gates
 Certifications: AWS Certified Developer – Associate; LangChain Academy credentials in Deep Research and Deep Agents with LangGraph
 Portfolio: https://prestilienpindoh.me
 Featured AI work: Ariadne AI (multi-agent career workflow with semantic matching, human review, role scouting, and explicit LangGraph control flow) and StudentHub (RAG over academic documents with grounded answers, citations, and quiz generation).
