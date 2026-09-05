@@ -17,6 +17,29 @@ type Project = {
 
 const featured: Project[] = [
   {
+    src: '/images/afrikdelices.png',
+    alt: 'Afrik Delices',
+    kind: 'Product engineering',
+    title: 'Afrik Delices',
+    description: 'A culinary product connecting people with authentic African recipes across web and mobile.',
+    signal: 'Founder-built product',
+    href: 'https://afrikdelices.com/',
+    tags: ['Product', 'Mobile', 'AI'],
+  },
+  {
+    src: '/images/vente-pro.png',
+    alt: 'Vente Pro dashboard',
+    kind: 'Business software',
+    title: 'Vente Pro',
+    description: 'Sales operations software spanning APIs, relational data, object storage, and automated delivery.',
+    signal: 'Full-stack ownership',
+    href: 'https://vente-pro-green.vercel.app/',
+    tags: ['FastAPI', 'PostgreSQL', 'CI/CD'],
+  },
+]
+
+const more: Project[] = [
+  {
     src: '/images/fraud_detection.png',
     alt: 'MLOps Fraud Detection',
     kind: 'Production ML',
@@ -35,19 +58,6 @@ const featured: Project[] = [
     signal: 'Prepare → reduce → cluster → interpret',
     href: 'https://github.com/pinsdev24/client_segmentation',
     tags: ['Python', 'PCA', 'K-Means'],
-  },
-]
-
-const more: Project[] = [
-  {
-    src: '/images/afrikdelices.png',
-    alt: 'Afrik Delices',
-    kind: 'Product engineering',
-    title: 'Afrik Delices',
-    description: 'A culinary product connecting people with authentic African recipes across web and mobile.',
-    signal: 'Founder-built product',
-    href: 'https://afrikdelices.com/',
-    tags: ['Product', 'Mobile', 'AI'],
   },
   // {
   //   src: '/images/valide_landing.png',
@@ -68,16 +78,6 @@ const more: Project[] = [
     signal: 'Live production client',
     href: 'https://www.faverobtp.com',
     tags: ['Next.js', 'i18n', 'Tailwind CSS'],
-  },
-  {
-    src: '/images/vente-pro.png',
-    alt: 'Vente Pro dashboard',
-    kind: 'Business software',
-    title: 'Vente Pro',
-    description: 'Sales operations software spanning APIs, relational data, object storage, and automated delivery.',
-    signal: 'Full-stack ownership',
-    href: 'https://vente-pro-green.vercel.app/',
-    tags: ['FastAPI', 'PostgreSQL', 'CI/CD'],
   },
 ]
 
