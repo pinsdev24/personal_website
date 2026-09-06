@@ -192,7 +192,7 @@ export default function FeaturedProjects() {
           ))}
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
           {more.map((p) => (
             <ProjectCard key={p.title} project={p} reduce={reduce} />
           ))}

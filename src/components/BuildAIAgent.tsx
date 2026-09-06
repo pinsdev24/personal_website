@@ -77,20 +77,22 @@ export default function BuildAIAgent() {
               className="rounded-3xl overflow-hidden"
               style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)' }}
             >
-              <div className={`grid grid-cols-1 lg:grid-cols-2 ${projectIndex % 2 ? 'lg:[&>*:first-child]:order-2' : ''}`}>
+              <div className={`grid grid-cols-1 lg:grid-cols-2 lg:items-stretch ${projectIndex % 2 ? 'lg:[&>*:first-child]:order-2' : ''}`}>
                 <div
-                  className="relative min-h-[280px] sm:min-h-[360px] lg:min-h-full overflow-hidden"
+                  className="relative overflow-hidden lg:flex lg:items-center lg:justify-center lg:p-6"
                   style={{ background: 'var(--bg-secondary)' }}
                 >
-                  <Image
-                    src={project.image}
-                    alt={`${project.title} — AI system by Prestilien Pindoh`}
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 50vw"
-                    className="object-cover transition-transform duration-700 hover:scale-[1.025]"
-                  />
+                  <div className="relative w-full aspect-[2/1]">
+                    <Image
+                      src={project.image}
+                      alt={`${project.title} — AI system by Prestilien Pindoh`}
+                      fill
+                      sizes="(max-width: 1024px) 100vw, 50vw"
+                      className="object-cover object-top"
+                    />
+                  </div>
                   <div
-                    className="absolute top-4 left-4 px-3 py-1.5 rounded-full text-[10px] font-semibold tracking-[0.12em] uppercase"
+                    className="absolute top-4 left-4 z-10 px-3 py-1.5 rounded-full text-[10px] font-semibold tracking-[0.12em] uppercase"
                     style={{ background: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--fg)' }}
                   >
                     {project.index} · {project.eyebrow}
