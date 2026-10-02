@@ -1,36 +1,95 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Editorial portfolio
 
-## Getting Started
+A personal portfolio set as a small magazine: paper-toned palette, strong
+typography, numbered entries, margin notes, and a single **thread** that is
+sewn down the page as you scroll.
 
-First, run the development server:
+Built on the stack that was already in the repo: **Next.js 16 (App Router) ·
+React 19 · TypeScript · Tailwind CSS v4**. All motion is plain CSS, SVG and
+`requestAnimationFrame`; the new pages do not use any animation library.
+
+## Run it
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev      # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+```bash
+npm run lint     # ESLint
+npm run build    # production build (type-checks too)
+npm run start    # serve the production build
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Node 20+ is recommended. Fonts (Fraunces, Instrument Sans, Caveat) are fetched
+by `next/font` at build time, so the first build needs network access.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Pages
 
-## Learn More
+| Route   | What it is                                                              |
+| ------- | ----------------------------------------------------------------------- |
+| `/`     | Cover (hero), the scroll-drawn thread with a timeline, selected work with filter pills |
+| `/work` | The full archive of projects, same filter pills                         |
 
-To learn more about Next.js, take a look at the following resources:
+## Editing the content
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**Everything you are meant to edit lives in one file: [`src/data/site.ts`](src/data/site.ts).**
+That covers your name and contact details, nav, hero copy, the timeline
+("pages" on the thread), the project list and its categories, and the footer.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Placeholder content is clearly marked:
 
-## Deploy on Vercel
+- Facts such as names, links, dates and screenshots were carried over from the
+  previous version of this portfolio (still available in `src/legacy/`).
+- Wording that was drafted for this redesign carries `placeholder: true` in the
+  data file and shows a dashed red **draft** tag next to it on the page.
+  Rewrite the text, then set `placeholder` to `false` (or delete the key).
+- To hide every draft tag at once, set `showPlaceholderMarkers = false`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Project screenshots live in `public/images/`. Add a file there and point
+`image.src` at it. Mark projects with `featured: true` to show them on the
+home page.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## The thread (design note)
+
+The metaphor is a **saddle stitch**: the single thread that binds a zine. A
+dotted line of "punched holes" is pre-drawn; as you scroll, a vermilion thread
+is sewn through it by a small needle, passing through one hole per chapter.
+
+- `src/components/JourneyThread.tsx` measures the timeline anchors, builds an
+  SVG path through them, and maps scroll position to a length along that path
+  (`stroke-dashoffset` plus a `requestAnimationFrame`-throttled scroll handler).
+- On narrow screens the thread runs down the left margin and the cards stack.
+- Without JavaScript, or with `prefers-reduced-motion: reduce`, the thread is
+  fully drawn and every card is visible; nothing animates.
+
+## Accessibility
+
+- Semantic landmarks, a skip link, one `h1` per page, and a keyboard-operable
+  mobile menu (`aria-expanded`, closes with Escape).
+- Filter pills are toggle buttons (`aria-pressed`) with a polite live count.
+- The decorative SVG is `aria-hidden`; external links announce that they open
+  in a new tab; visible focus rings throughout.
+- Motion respects `prefers-reduced-motion` (reveals, needle, ping dot).
+
+## Project layout
+
+```
+src/
+  app/            routes (/, /work), layout, global styles, sitemap
+  components/     SiteHeader, Hero, JourneyThread, ProjectBrowser, ...
+  data/site.ts    <- all editable content
+  legacy/         previous portfolio components (voice agent, chat widget, ...)
+  db/, app/api/   previous chat backend, untouched (db client is now lazy)
+```
+
+The previous site's components were moved to `src/legacy/` and are no longer
+rendered. `/api/chat` and the database client are unchanged except that the
+database connection is now created on first use, so `npm run build` works
+without `DATABASE_URL`. Delete `src/legacy/` once you are sure you do not need
+it.
+
+## Deploying
+
+Any Next.js host works; the project is set up for Vercel (analytics and speed
+insights are kept from the previous site).
