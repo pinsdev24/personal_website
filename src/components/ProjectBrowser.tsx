@@ -4,12 +4,14 @@ import Image from "next/image";
 import { useId, useMemo, useState } from "react";
 import {
   categories,
+  showPlaceholderMarkers,
   type CategoryId,
   type Project,
 } from "@/data/site";
 import DraftTag from "./DraftTag";
+import ImageSlot from "./ImageSlot";
 
-type Variant = "feature" | "index";
+type Variant = "feature" | "archive";
 
 function ProjectLinks({ project }: { project: Project }) {
   return (
@@ -45,19 +47,31 @@ function FeatureEntry({
   const label = categories.find((c) => c.id === project.category)?.label;
   return (
     <article className="grid items-center gap-6 border-t border-ink py-8 md:grid-cols-12 md:gap-10 md:py-12">
-      <div
-        className={`md:col-span-7 ${flip ? "md:order-2" : ""}`}
-      >
-        <div className="page-card overflow-hidden p-2">
-          <Image
-            src={project.image.src}
-            alt={project.image.alt}
-            width={1200}
-            height={750}
-            sizes="(min-width: 1152px) 640px, (min-width: 768px) 55vw, 92vw"
-            className="aspect-[16/10] w-full object-cover object-top"
-          />
-        </div>
+      <div className={`md:col-span-7 ${flip ? "md:order-2" : ""}`}>
+        {project.image ? (
+          <div className="page-card overflow-hidden p-2">
+            <Image
+              src={project.image.src}
+              alt={project.image.alt}
+              width={1200}
+              height={750}
+              sizes="(min-width: 1152px) 640px, (min-width: 768px) 55vw, 92vw"
+              className="aspect-[16/10] w-full object-cover object-top"
+            />
+          </div>
+        ) : (
+          <div className="page-card p-2">
+            <ImageSlot
+              slot={{
+                src: null,
+                suggestedPath: `/images/projects/${project.slug}.png`,
+                alt: "",
+                caption: "",
+              }}
+              sizes="640px"
+            />
+          </div>
+        )}
       </div>
       <div className={`md:col-span-5 ${flip ? "md:order-1" : ""}`}>
         <p className="folio flex items-center gap-3">
@@ -91,32 +105,41 @@ function FeatureEntry({
   );
 }
 
-function IndexCard({ project, number }: { project: Project; number: number }) {
+function ArchiveRow({ project, number }: { project: Project; number: number }) {
   const label = categories.find((c) => c.id === project.category)?.label;
   return (
-    <article className="page-card flex h-full flex-col p-3 pb-5">
-      <Image
-        src={project.image.src}
-        alt={project.image.alt}
-        width={800}
-        height={500}
-        sizes="(min-width: 1152px) 360px, (min-width: 640px) 45vw, 92vw"
-        className="aspect-[16/10] w-full border border-ink/70 object-cover object-top"
-      />
-      <div className="flex flex-1 flex-col px-2 pt-4">
-        <p className="folio flex justify-between gap-2">
-          <span>
-            {String(number).padStart(2, "0")} · {label}
-          </span>
-          <span>{project.year}</span>
+    <li className="archive-row flex gap-4 border-t border-ink/40 px-1 py-6 sm:gap-6 sm:px-3 md:py-7">
+      <p className="font-display w-9 shrink-0 pt-1 text-2xl italic text-vermilion sm:w-12 sm:text-3xl">
+        {String(number).padStart(2, "0")}
+      </p>
+      <div className="relative hidden aspect-[4/3] w-32 shrink-0 self-start overflow-hidden border border-ink/60 sm:block md:w-40">
+        {project.image ? (
+          <Image
+            src={project.image.src}
+            alt={project.image.alt}
+            fill
+            sizes="160px"
+            className="object-cover object-top"
+          />
+        ) : (
+          showPlaceholderMarkers && (
+            <div className="slot-empty flex h-full items-center justify-center p-1 text-center">
+              <p className="folio !text-[0.6rem] !text-vermilion">
+                Placeholder · image slot
+              </p>
+            </div>
+          )
+        )}
+      </div>
+      <div className="min-w-0 flex-1">
+        <p className="folio">
+          {label} · {project.kind} · {project.year}
         </p>
-        <h3 className="display mt-2 text-2xl font-semibold md:text-3xl">
+        <h3 className="display mt-1 text-2xl font-semibold md:text-3xl">
           {project.title}
           <DraftTag show={project.placeholder} />
         </h3>
-        <p className="mt-2 flex-1 text-[0.97rem] text-ink-soft">
-          {project.blurb}
-        </p>
+        <p className="mt-1.5 max-w-2xl text-ink-soft">{project.blurb}</p>
         <ul className="mt-3 flex flex-wrap gap-1.5" aria-label="Tags">
           {project.tags.map((t) => (
             <li
@@ -127,11 +150,13 @@ function IndexCard({ project, number }: { project: Project; number: number }) {
             </li>
           ))}
         </ul>
-        <div className="mt-4">
-          <ProjectLinks project={project} />
-        </div>
+        {project.links.length > 0 && (
+          <div className="mt-3">
+            <ProjectLinks project={project} />
+          </div>
+        )}
       </div>
-    </article>
+    </li>
   );
 }
 
@@ -192,11 +217,11 @@ export default function ProjectBrowser({
           ))}
         </div>
       ) : (
-        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <ol className="mt-8 border-b border-ink/40">
           {visible.map((p, i) => (
-            <IndexCard key={p.slug} project={p} number={i + 1} />
+            <ArchiveRow key={p.slug} project={p} number={i + 1} />
           ))}
-        </div>
+        </ol>
       )}
     </div>
   );

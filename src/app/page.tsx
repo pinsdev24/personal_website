@@ -1,6 +1,9 @@
 import Link from "next/link";
 import Hero from "@/components/Hero";
 import JourneyThread from "@/components/JourneyThread";
+import FieldNotes from "@/components/FieldNotes";
+import Research from "@/components/Research";
+import Certifications from "@/components/Certifications";
 import ProjectBrowser from "@/components/ProjectBrowser";
 import DraftTag from "@/components/DraftTag";
 import Reveal from "@/components/Reveal";
@@ -13,6 +16,8 @@ export default function Home() {
     <>
       <Hero />
       <JourneyThread />
+      <FieldNotes />
+      <Research />
       <section
         id="selected"
         aria-labelledby="selected-title"
@@ -36,10 +41,11 @@ export default function Home() {
 
         <p className="mt-10 text-center">
           <Link href="/work" className="btn btn-solid">
-            Interested? There is more — all work <span aria-hidden="true">→</span>
+            {selected.seeMore} <span aria-hidden="true">→</span>
           </Link>
         </p>
       </section>
+      <Certifications />
     </>
   );
 }

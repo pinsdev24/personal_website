@@ -26,42 +26,72 @@ by `next/font` at build time, so the first build needs network access.
 
 ## Pages
 
-| Route   | What it is                                                              |
-| ------- | ----------------------------------------------------------------------- |
-| `/`     | Cover (hero), the scroll-drawn thread with a timeline, selected work with filter pills |
-| `/work` | The full archive of projects, same filter pills                         |
+| Route   | What it is                                                                                          |
+| ------- | --------------------------------------------------------------------------------------------------- |
+| `/`     | Cover (slim hero + robot-arm illustration), the thread with illustrated journey cards, field notes (control / robotics / RL), master's research, 3 selected projects, certifications |
+| `/work` | "The back room": a darker, themed archive of every project, with filter pills and an exit link at both ends |
+
+The work page follows a three-tier structure: a few curated projects on the
+home page, a flat filterable archive one level deeper, and a pointer to the
+full GitHub for everything else. Copy, art and palette are original.
 
 ## Editing the content
 
 **Everything you are meant to edit lives in one file: [`src/data/site.ts`](src/data/site.ts).**
-That covers your name and contact details, nav, hero copy, the timeline
-("pages" on the thread), the project list and its categories, and the footer.
+It covers contact details, nav, hero copy, the journey stops, field notes, the
+master's research, certifications, the project list and the footer.
 
 Placeholder content is clearly marked:
 
-- Facts such as names, links, dates and screenshots were carried over from the
-  previous version of this portfolio (still available in `src/legacy/`).
-- Wording that was drafted for this redesign carries `placeholder: true` in the
-  data file and shows a dashed red **draft** tag next to it on the page.
-  Rewrite the text, then set `placeholder` to `false` (or delete the key).
+- Facts (names, links, dates, screenshots, certificates) come from the previous
+  version of this portfolio (still in `src/legacy/`).
+- Wording drafted for this redesign carries `placeholder: true` and shows a
+  dashed red **draft** tag. Rewrite it, then set `placeholder` to `false`.
 - To hide every draft tag at once, set `showPlaceholderMarkers = false`.
 
-Project screenshots live in `public/images/`. Add a file there and point
-`image.src` at it. Mark projects with `featured: true` to show them on the
-home page.
+### Image slots
+
+Each journey stop has an `image` slot: `{ src, suggestedPath, alt, caption }`.
+While `src` is `null` the page shows a hatched dashed "Placeholder - image slot"
+frame displaying the suggested path. To fill one: drop the file in
+`public/images/journey/` (for example `01-valide.jpg`) and set
+`src: "/images/journey/01-valide.jpg"`. Projects use `image: { src, alt }` the
+same way (`null` shows a slot with the suggested `/images/projects/<slug>.png`).
+Certifications use `image`. Project screenshots live in `public/images/`.
+
+### Research and certifications
+
+`research` holds the UY1 master's title (French, verbatim), a draft English
+translation, abstract, keywords and a `details` list (year, supervisor, models,
+thesis link). Leave a `value` empty and the page shows a "to fill" tag. Add or
+remove certifications in `certifications.items`; an item with `href: null` and
+`image: null` renders as a placeholder card.
 
 ## The thread (design note)
 
-The metaphor is a **saddle stitch**: the single thread that binds a zine. A
-dotted line of "punched holes" is pre-drawn; as you scroll, a vermilion thread
-is sewn through it by a small needle, passing through one hole per chapter.
+The metaphor is a **saddle stitch**: the single thread that binds a zine. Each
+journey stop punches a "hole"; as you scroll, a vermilion twisted thread is
+sewn through them by a small needle.
 
-- `src/components/JourneyThread.tsx` measures the timeline anchors, builds an
-  SVG path through them, and maps scroll position to a length along that path
-  (`stroke-dashoffset` plus a `requestAnimationFrame`-throttled scroll handler).
+- `src/components/JourneyThread.tsx` measures the hole anchors, builds a cubic
+  Bezier path through them and reveals it with an SVG mask (stroke-dashoffset)
+  driven by a smoothed `requestAnimationFrame` loop that **only runs while the
+  thread is catching up with the scroll**.
+- Details: soft shadow and ply texture on the thread, a needle that follows the
+  path tangent, a spool counter ("Page 03 / 07"), a cross-stitch knot and ripple
+  when a hole is reached, cards that settle and image slots that wipe in, and
+  parallax doodles driven by one CSS variable.
 - On narrow screens the thread runs down the left margin and the cards stack.
 - Without JavaScript, or with `prefers-reduced-motion: reduce`, the thread is
-  fully drawn and every card is visible; nothing animates.
+  fully drawn, every card is visible, and no scroll listener is attached.
+
+### Illustrations
+
+`src/components/art/Illustrations.tsx` contains original SVG drawings of a
+robot arm, a control feedback loop with a step response, a LiDAR rover, an RL
+grid world with a reward curve, and a speech-embedding diagram. They animate
+with CSS only (transform, offset-path, stroke-dash) and are static under
+`prefers-reduced-motion`.
 
 ## Accessibility
 
@@ -70,14 +100,16 @@ is sewn through it by a small needle, passing through one hole per chapter.
 - Filter pills are toggle buttons (`aria-pressed`) with a polite live count.
 - The decorative SVG is `aria-hidden`; external links announce that they open
   in a new tab; visible focus rings throughout.
-- Motion respects `prefers-reduced-motion` (reveals, needle, ping dot).
+- Motion respects `prefers-reduced-motion` (reveals, thread, needle, illustrations).
+- Illustrations are `role="img"` with labels; decorative parts are `aria-hidden`.
 
 ## Project layout
 
 ```
 src/
   app/            routes (/, /work), layout, global styles, sitemap
-  components/     SiteHeader, Hero, JourneyThread, ProjectBrowser, ...
+  components/     SiteHeader, Hero, JourneyThread, FieldNotes, Research,
+                  Certifications, ProjectBrowser, ImageSlot, art/Illustrations
   data/site.ts    <- all editable content
   legacy/         previous portfolio components (voice agent, chat widget, ...)
   db/, app/api/   previous chat backend, untouched (db client is now lazy)

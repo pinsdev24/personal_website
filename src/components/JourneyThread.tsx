@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { journey } from "@/data/site";
 import DraftTag from "./DraftTag";
+import ImageSlot from "./ImageSlot";
 
 type Geometry = {
   d: string;
@@ -11,18 +12,80 @@ type Geometry = {
   length: number;
   /** y coordinate of the thread sampled at evenly spaced lengths. */
   ys: number[];
-  stopYs: number[];
+  stopLens: number[];
 };
 
-const SAMPLES = 240;
+const SAMPLES = 280;
+
+function lengthAtY(ys: number[], length: number, y: number) {
+  if (y <= ys[0]) return 0;
+  if (y >= ys[SAMPLES]) return length;
+  let lo = 0;
+  let hi = SAMPLES;
+  while (hi - lo > 1) {
+    const mid = (lo + hi) >> 1;
+    if (ys[mid] <= y) lo = mid;
+    else hi = mid;
+  }
+  const span = ys[hi] - ys[lo] || 1;
+  return ((lo + (y - ys[lo]) / span) / SAMPLES) * length;
+}
+
+const DOODLES = [
+  { cls: "left-[1.5%] top-[9%]", depth: -70, spin: 220, kind: "star" },
+  { cls: "right-[2%] top-[27%]", depth: -120, spin: -90, kind: "disc" },
+  { cls: "left-[3%] top-[56%]", depth: -50, spin: 60, kind: "squiggle" },
+  { cls: "right-[3%] top-[72%]", depth: -90, spin: 140, kind: "flag" },
+] as const;
+
+function Doodle({ kind }: { kind: (typeof DOODLES)[number]["kind"] }) {
+  const common = {
+    viewBox: "0 0 60 60",
+    className: "h-12 w-12 lg:h-16 lg:w-16",
+    fill: "none",
+    stroke: "var(--color-ink)",
+    strokeWidth: 2.2,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+    "aria-hidden": true,
+  };
+  if (kind === "star")
+    return (
+      <svg {...common}>
+        <path d="M30 6v48M8 18l44 24M8 42l44-24" />
+        <circle cx="30" cy="30" r="5" fill="var(--color-marker)" />
+      </svg>
+    );
+  if (kind === "disc")
+    return (
+      <svg {...common}>
+        <circle cx="30" cy="30" r="22" fill="var(--color-marker)" />
+        <path d="M14 22c10-8 22-8 32 0M12 34c12 8 24 8 36 0" opacity="0.6" />
+      </svg>
+    );
+  if (kind === "squiggle")
+    return (
+      <svg {...common}>
+        <path d="M6 36c6-14 10-14 14 0s10 14 14 0 10-14 14 0 6 8 6 8" stroke="var(--color-vermilion)" strokeWidth={3} />
+      </svg>
+    );
+  return (
+    <svg {...common}>
+      <path d="M16 54V8" />
+      <path d="M16 8l32 10-32 12z" fill="var(--color-vermilion)" />
+    </svg>
+  );
+}
 
 export default function JourneyThread() {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
   const anchorRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const measureRef = useRef<SVGPathElement>(null);
-  const drawnRef = useRef<SVGPathElement>(null);
+  const revealRef = useRef<SVGPathElement>(null);
   const needleRef = useRef<SVGGElement>(null);
+  const spoolRef = useRef<SVGGElement>(null);
   const geoRef = useRef<Geometry | null>(null);
+  const motion = useRef({ cur: 0, target: 0, raf: 0, last: 0 });
   const reachedRef = useRef(-1);
 
   const [geo, setGeo] = useState<Geometry | null>(null);
@@ -38,8 +101,9 @@ export default function JourneyThread() {
   }, []);
 
   const measure = useCallback(() => {
-    const box = containerRef.current;
-    if (!box) return;
+    const box = rootRef.current;
+    const probe = measureRef.current;
+    if (!box || !probe) return;
     const rect = box.getBoundingClientRect();
     const pts = anchorRefs.current
       .filter((el): el is HTMLSpanElement => el !== null)
@@ -53,9 +117,10 @@ export default function JourneyThread() {
     if (pts.length < 2) return;
 
     const wide = rect.width >= 768;
-    const sway = wide ? 70 : 11;
-    let d = `M ${pts[0].x.toFixed(1)} 0 L ${pts[0].x.toFixed(1)} ${(pts[0].y - 40).toFixed(1)}`;
-    let prev = { x: pts[0].x, y: pts[0].y - 40 };
+    const sway = wide ? 78 : 12;
+    const lead = { x: pts[0].x, y: pts[0].y - 56 };
+    let d = `M ${lead.x.toFixed(1)} 0 L ${lead.x.toFixed(1)} ${lead.y.toFixed(1)}`;
+    let prev = lead;
     pts.forEach((p, i) => {
       const dir = i % 2 === 0 ? 1 : -1;
       const dy = p.y - prev.y;
@@ -63,8 +128,6 @@ export default function JourneyThread() {
       prev = p;
     });
 
-    const probe = measureRef.current;
-    if (!probe) return;
     probe.setAttribute("d", d);
     const length = probe.getTotalLength();
     const ys: number[] = [];
@@ -77,7 +140,7 @@ export default function JourneyThread() {
       height: rect.height,
       length,
       ys,
-      stopYs: pts.map((p) => p.y),
+      stopLens: pts.map((p) => lengthAtY(ys, length, p.y)),
     };
     geoRef.current = next;
     setGeo(next);
@@ -85,7 +148,7 @@ export default function JourneyThread() {
 
   useEffect(() => {
     measure();
-    const box = containerRef.current;
+    const box = rootRef.current;
     if (!box) return;
     const ro = new ResizeObserver(() => measure());
     ro.observe(box);
@@ -93,89 +156,105 @@ export default function JourneyThread() {
     return () => ro.disconnect();
   }, [measure]);
 
-  const update = useCallback(() => {
-    const g = geoRef.current;
-    const box = containerRef.current;
-    const path = drawnRef.current;
-    const needle = needleRef.current;
-    if (!g || !box || !path || !needle) return;
+  const render = useCallback(
+    (len: number) => {
+      const g = geoRef.current;
+      const box = rootRef.current;
+      const reveal = revealRef.current;
+      const needle = needleRef.current;
+      if (!g || !box || !reveal || !needle) return;
 
-    const top = box.getBoundingClientRect().top;
-    const targetY = window.innerHeight * 0.58 - top;
-
-    let len: number;
-    if (reduced) {
-      len = g.length;
-    } else if (targetY <= g.ys[0]) {
-      len = 0;
-    } else if (targetY >= g.ys[SAMPLES]) {
-      len = g.length;
-    } else {
-      let lo = 0;
-      let hi = SAMPLES;
-      while (hi - lo > 1) {
-        const mid = (lo + hi) >> 1;
-        if (g.ys[mid] <= targetY) lo = mid;
-        else hi = mid;
-      }
-      const span = g.ys[hi] - g.ys[lo] || 1;
-      const t = (targetY - g.ys[lo]) / span;
-      len = ((lo + t) / SAMPLES) * g.length;
-    }
-
-    path.style.strokeDashoffset = String(g.length - len);
-
-    if (reduced || len <= 0) {
-      needle.style.opacity = "0";
-    } else {
-      const p = path.getPointAtLength(len);
-      const q = path.getPointAtLength(Math.min(g.length, len + 2));
-      const angle = (Math.atan2(q.y - p.y, q.x - p.x) * 180) / Math.PI;
-      needle.setAttribute(
+      reveal.style.strokeDashoffset = String(g.length - len);
+      box.style.setProperty("--p", (len / g.length).toFixed(4));
+      spoolRef.current?.setAttribute(
         "transform",
-        `translate(${p.x.toFixed(1)} ${p.y.toFixed(1)}) rotate(${angle.toFixed(1)})`,
+        `rotate(${(len * 0.55).toFixed(1)} 16 16)`,
       );
-      needle.style.opacity = len >= g.length - 1 ? "0" : "1";
-    }
 
-    let count = -1;
-    g.stopYs.forEach((y, i) => {
-      if (reduced || y <= targetY + 24) count = i;
-    });
-    if (count !== reachedRef.current) {
-      reachedRef.current = count;
-      setReached(count);
-    }
+      if (reduced || len <= 0.5 || len >= g.length - 0.5) {
+        needle.style.opacity = "0";
+      } else {
+        const p = reveal.getPointAtLength(len);
+        const q = reveal.getPointAtLength(Math.min(g.length, len + 3));
+        const angle = (Math.atan2(q.y - p.y, q.x - p.x) * 180) / Math.PI;
+        needle.setAttribute(
+          "transform",
+          `translate(${p.x.toFixed(1)} ${p.y.toFixed(1)}) rotate(${angle.toFixed(1)})`,
+        );
+        needle.style.opacity = "1";
+      }
+
+      let count = -1;
+      g.stopLens.forEach((l, i) => {
+        if (len >= l - 2) count = i;
+      });
+      if (count !== reachedRef.current) {
+        reachedRef.current = count;
+        setReached(count);
+      }
+    },
+    [reduced],
+  );
+
+  const targetLength = useCallback(() => {
+    const g = geoRef.current;
+    const box = rootRef.current;
+    if (!g || !box) return 0;
+    if (reduced) return g.length;
+    const y = window.innerHeight * 0.58 - box.getBoundingClientRect().top;
+    return lengthAtY(g.ys, g.length, y);
   }, [reduced]);
 
   useEffect(() => {
-    let frame = 0;
-    const schedule = () => {
-      if (frame) return;
-      frame = requestAnimationFrame(() => {
-        frame = 0;
-        update();
-      });
+    if (!geo) return;
+    const m = motion.current;
+
+    const tick = (now: number) => {
+      const dt = Math.min(0.05, (now - m.last) / 1000);
+      m.last = now;
+      const k = 1 - Math.exp(-dt * 7);
+      m.cur += (m.target - m.cur) * k;
+      if (Math.abs(m.target - m.cur) < 0.4) m.cur = m.target;
+      render(m.cur);
+      m.raf = m.cur === m.target ? 0 : requestAnimationFrame(tick);
     };
-    schedule();
-    if (!reduced) {
-      window.addEventListener("scroll", schedule, { passive: true });
-    }
-    window.addEventListener("resize", schedule);
+
+    const kick = () => {
+      m.target = targetLength();
+      if (reduced) {
+        m.cur = m.target;
+        render(m.cur);
+        return;
+      }
+      if (!m.raf) {
+        m.last = performance.now();
+        m.raf = requestAnimationFrame(tick);
+      }
+    };
+
+    m.target = targetLength();
+    m.cur = m.target;
+    render(m.cur);
+
+    if (!reduced) window.addEventListener("scroll", kick, { passive: true });
+    window.addEventListener("resize", kick);
     return () => {
-      if (frame) cancelAnimationFrame(frame);
-      window.removeEventListener("scroll", schedule);
-      window.removeEventListener("resize", schedule);
+      if (m.raf) cancelAnimationFrame(m.raf);
+      m.raf = 0;
+      window.removeEventListener("scroll", kick);
+      window.removeEventListener("resize", kick);
     };
-  }, [update, geo, reduced]);
+  }, [geo, reduced, render, targetLength]);
 
   const enhanced = geo !== null && !reduced;
+  const total = journey.stops.length;
+  const page = Math.max(0, reached) + 1;
 
   return (
     <section
       id="journey"
       aria-labelledby="journey-title"
-      className={`relative border-y border-ink bg-paper-deep/60 ${enhanced ? "js-thread" : ""}`}
+      className={`relative overflow-hidden border-y border-ink bg-paper-deep/60 ${enhanced ? "js-thread" : ""}`}
     >
       <div className="mx-auto max-w-6xl px-5 py-16 md:px-8 md:py-24">
         <header className="mx-auto max-w-2xl text-center">
@@ -192,7 +271,44 @@ export default function JourneyThread() {
           </p>
         </header>
 
-        <div ref={containerRef} className="relative mt-14 md:mt-20">
+        <div ref={rootRef} className="relative mt-14 md:mt-20">
+          {/* Sticky page counter with a spool that unwinds as you scroll */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none sticky top-[4.6rem] z-30 -mt-4 mb-4 flex h-0 justify-end overflow-visible md:justify-center"
+          >
+            <div className="flex items-center gap-2 rounded-full border-[1.5px] border-ink bg-paper px-3 py-1 shadow-[2px_2px_0_var(--color-vermilion)]">
+              <svg viewBox="0 0 32 32" className="h-6 w-6" fill="none" stroke="var(--color-ink)" strokeWidth="1.8" strokeLinecap="round">
+                <g ref={spoolRef}>
+                  <circle cx="16" cy="16" r="11" fill="var(--color-card)" />
+                  <circle cx="16" cy="16" r="3" fill="var(--color-vermilion)" />
+                  <path d="M16 5v6M16 21v6M5 16h6M21 16h6" />
+                </g>
+              </svg>
+              <span className="folio !text-ink">
+                Page {String(page).padStart(2, "0")} / {String(total).padStart(2, "0")}
+              </span>
+            </div>
+          </div>
+
+          {/* Parallax doodles in the margins (desktop) */}
+          <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0 hidden md:block">
+            {DOODLES.map((dd) => (
+              <div
+                key={dd.kind}
+                className={`doodle absolute ${dd.cls}`}
+                style={
+                  {
+                    "--depth": `${dd.depth}px`,
+                    "--spin": `${dd.spin}deg`,
+                  } as React.CSSProperties
+                }
+              >
+                <Doodle kind={dd.kind} />
+              </div>
+            ))}
+          </div>
+
           <svg
             aria-hidden="true"
             focusable="false"
@@ -203,6 +319,29 @@ export default function JourneyThread() {
             <path ref={measureRef} fill="none" stroke="none" />
             {geo && (
               <>
+                <defs>
+                  <mask
+                    id="thread-reveal"
+                    maskUnits="userSpaceOnUse"
+                    x={-60}
+                    y={-60}
+                    width={geo.width + 120}
+                    height={geo.height + 120}
+                  >
+                    <path
+                      ref={revealRef}
+                      d={geo.d}
+                      fill="none"
+                      stroke="#fff"
+                      strokeWidth="16"
+                      strokeLinecap="butt"
+                      strokeDasharray={geo.length}
+                      strokeDashoffset={reduced ? 0 : geo.length}
+                    />
+                  </mask>
+                </defs>
+
+                {/* punched holes: the path that is still to be sewn */}
                 <path
                   d={geo.d}
                   fill="none"
@@ -212,43 +351,36 @@ export default function JourneyThread() {
                   strokeLinecap="round"
                   strokeDasharray="1 9"
                 />
-                <path
-                  ref={drawnRef}
-                  d={geo.d}
-                  fill="none"
-                  stroke="var(--color-vermilion)"
-                  strokeWidth="2.75"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeDasharray={geo.length}
-                  strokeDashoffset={reduced ? 0 : geo.length}
-                />
+
+                <g mask="url(#thread-reveal)" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                  <path d={geo.d} stroke="var(--color-ink)" strokeOpacity="0.22" strokeWidth="6" transform="translate(2 4)" />
+                  <path d={geo.d} stroke="var(--color-vermilion)" strokeWidth="3.4" />
+                  <path d={geo.d} stroke="var(--color-card)" strokeOpacity="0.7" strokeWidth="1.2" strokeDasharray="2 7" />
+                </g>
+
                 <g ref={needleRef} style={{ opacity: 0 }}>
-                  <g className="motion-safe:animate-[needle-bob_1.6s_ease-in-out_infinite]">
-                    <path
-                      d="M0 0 L-34 -1.6 L-34 1.6 Z"
-                      fill="var(--color-ink)"
-                    />
-                    <ellipse
-                      cx="-28"
-                      cy="0"
-                      rx="2.6"
-                      ry="0.9"
-                      fill="var(--color-paper)"
-                    />
+                  <g className="needle-sway">
+                    <path d="M0 0 L-38 -1.9 L-38 1.9 Z" fill="var(--color-ink)" />
+                    <path d="M-8 -1.1 L-30 -1.5" stroke="var(--color-card)" strokeOpacity="0.5" strokeWidth="0.7" />
+                    <ellipse cx="-32" cy="0" rx="3" ry="1" fill="var(--color-paper)" />
+                    <circle cx="0" cy="0" r="2.2" fill="var(--color-vermilion)" />
                   </g>
                 </g>
               </>
             )}
           </svg>
 
-          <ol className="relative z-10 space-y-10 md:space-y-4">
+          <ol className="relative z-10 space-y-12 md:space-y-6">
             {journey.stops.map((stop, i) => {
               const right = i % 2 === 0;
+              const on = reached >= i || !enhanced;
               return (
                 <li
                   key={stop.page}
-                  data-reached={reached >= i || !enhanced}
+                  data-reached={on}
+                  style={
+                    { "--tilt": `${right ? 1.4 : -1.4}deg` } as React.CSSProperties
+                  }
                   className="thread-stop relative pl-12 md:grid md:grid-cols-2 md:pb-10 md:pl-0"
                 >
                   <span
@@ -256,19 +388,24 @@ export default function JourneyThread() {
                       anchorRefs.current[i] = el;
                     }}
                     aria-hidden="true"
-                    className={`absolute left-[7px] top-9 z-20 block h-[14px] w-[14px] rounded-full border-2 transition-colors duration-500 md:left-1/2 md:-ml-[7px] ${
-                      reached >= i || !enhanced
-                        ? "border-vermilion bg-marker"
-                        : "border-ink bg-paper"
-                    }`}
-                  />
+                    className="stop-hole absolute left-[3px] top-9 z-20 block h-[22px] w-[22px] md:left-1/2 md:-ml-[11px]"
+                  >
+                    <svg viewBox="0 0 22 22" className="h-full w-full" fill="none" strokeLinecap="round">
+                      <circle className="hole-ring" cx="11" cy="11" r="10" />
+                      <circle className="hole-dot" cx="11" cy="11" r="4.5" />
+                      <path className="hole-x" d="M5 5l12 12M17 5L5 17" pathLength={1} />
+                    </svg>
+                  </span>
                   <article
-                    className={`thread-card page-card relative p-6 md:p-7 ${
-                      right
-                        ? "md:col-start-2 md:ml-14"
-                        : "md:col-start-1 md:mr-14"
+                    className={`thread-card page-card relative p-5 md:p-6 ${
+                      right ? "md:col-start-2 md:ml-14" : "md:col-start-1 md:mr-14"
                     }`}
                   >
+                    <ImageSlot
+                      slot={stop.image}
+                      sizes="(min-width: 1152px) 480px, (min-width: 768px) 40vw, 80vw"
+                      className="mb-5"
+                    />
                     <div className="flex items-baseline justify-between gap-4">
                       <p className="folio">{stop.page}</p>
                       <p className="font-display text-3xl font-semibold italic text-vermilion">

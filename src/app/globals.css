@@ -233,44 +233,400 @@ body {
 }
 
 /* Thread */
-.thread-stop .thread-card {
+.thread-card {
   transition:
-    transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1),
-    box-shadow 0.5s ease;
+    opacity 0.6s ease,
+    transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.js-thread .thread-stop:not([data-reached="true"]) .thread-card {
-  transform: translateY(10px);
-  opacity: 0.55;
+.js-thread .thread-stop[data-reached="false"] .thread-card {
+  opacity: 0.35;
+  transform: translateY(28px) rotate(var(--tilt, 0deg));
 }
 
-.thread-stop[data-reached="true"] .thread-card {
-  opacity: 1;
+.slot-inner {
+  transition: clip-path 1s cubic-bezier(0.6, 0, 0.2, 1) 0.15s;
 }
 
-.thread-stop .thread-card {
+.js-thread .thread-stop[data-reached="false"] .slot-inner {
+  clip-path: inset(0 100% 0 0);
+}
+
+.slot {
+  position: relative;
+}
+
+.tape::before {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  top: -0.65rem;
+  left: 50%;
+  width: 4.4rem;
+  height: 1.3rem;
+  margin-left: -2.2rem;
+  transform: rotate(-3deg);
+  background: rgb(243 215 104 / 0.78);
+  box-shadow: 0 1px 2px rgb(28 24 20 / 0.25);
+}
+
+.slot-empty {
+  background:
+    repeating-linear-gradient(
+      135deg,
+      transparent 0 9px,
+      rgb(192 54 27 / 0.1) 9px 10px
+    ),
+    var(--color-paper-deep);
+  outline: 2px dashed var(--color-vermilion);
+  outline-offset: -8px;
+}
+
+.stop-hole::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  border: 2px solid var(--color-vermilion);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.hole-ring {
+  fill: var(--color-paper);
+  stroke: var(--color-ink);
+  stroke-width: 2;
   transition:
-    opacity 0.5s ease,
-    transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+    fill 0.4s ease,
+    stroke 0.4s ease;
+}
+
+.hole-dot {
+  fill: var(--color-ink);
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.hole-x {
+  stroke: var(--color-vermilion);
+  stroke-width: 3.2;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 0.55s ease 0.1s;
+}
+
+.thread-stop[data-reached="true"] .hole-ring {
+  fill: var(--color-marker);
+  stroke: var(--color-vermilion);
+}
+
+.thread-stop[data-reached="true"] .hole-dot {
+  opacity: 0;
+}
+
+.thread-stop[data-reached="true"] .hole-x {
+  stroke-dashoffset: 0;
+}
+
+.doodle {
+  transform: translateY(calc(var(--p, 0) * var(--depth, 0px)))
+    rotate(calc(var(--p, 0) * var(--spin, 0deg)));
+  opacity: 0.8;
+}
+
+.needle-sway {
+  transform-box: fill-box;
+  transform-origin: 100% 50%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .js-thread .thread-stop[data-reached="true"] .stop-hole::after {
+    animation: hole-ripple 1s ease-out;
+  }
+
+  .needle-sway {
+    animation: needle-sway 1.8s ease-in-out infinite;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .js-thread .thread-stop:not([data-reached="true"]) .thread-card {
+  .thread-card,
+  .slot-inner,
+  .hole-x,
+  .hole-ring,
+  .hole-dot {
+    transition: none;
+  }
+
+  .js-thread .thread-stop[data-reached="false"] .thread-card {
     transform: none;
     opacity: 1;
   }
 
-  .thread-stop .thread-card {
-    transition: none;
+  .js-thread .thread-stop[data-reached="false"] .slot-inner {
+    clip-path: none;
   }
 }
 
-@keyframes needle-bob {
+@keyframes hole-ripple {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(2.6);
+    opacity: 0;
+  }
+}
+
+@keyframes needle-sway {
   0%,
   100% {
-    transform: translateY(0);
+    transform: rotate(-4deg);
   }
   50% {
-    transform: translateY(-2px);
+    transform: rotate(4deg);
   }
+}
+
+/* Illustrations (decorative SVG art) */
+.art-arm-1,
+.art-arm-2,
+.art-grip-l,
+.art-grip-r,
+.art-sweep {
+  transform-box: view-box;
+}
+
+.art-arm-1 {
+  transform-origin: 240px 360px;
+  transform: rotate(-22deg);
+}
+
+.art-arm-2 {
+  transform-origin: 240px 210px;
+  transform: rotate(68deg);
+}
+
+.art-grip-l,
+.art-grip-r {
+  transform-origin: 240px 78px;
+}
+
+.art-sweep {
+  transform-origin: 0 0;
+}
+
+.art-pulse {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.art-draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+
+.art-ride {
+  offset-path: path("M40 282 C70 282, 88 168, 132 168 S190 202, 232 192 S290 186, 404 188");
+  offset-distance: 100%;
+}
+
+.art-agent {
+  offset-path: path("M54 232 L102 232 L102 40 L294 40");
+  offset-distance: 0%;
+}
+
+.art-bar {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .art-arm-1 {
+    animation: arm-1 7s ease-in-out infinite;
+  }
+  .art-arm-2 {
+    animation: arm-2 5.2s ease-in-out infinite;
+  }
+  .art-grip-l {
+    animation: grip-l 2.6s ease-in-out infinite;
+  }
+  .art-grip-r {
+    animation: grip-r 2.6s ease-in-out infinite;
+  }
+  .art-pulse {
+    animation: art-pulse 2.4s ease-in-out infinite;
+  }
+  .art-sweep {
+    animation: art-spin 6s linear infinite;
+  }
+  .art-march {
+    animation: art-march 2.4s linear infinite;
+  }
+  .art-bar {
+    animation: art-bar 1.7s ease-in-out infinite alternate;
+  }
+  .art-draw {
+    animation: art-draw 6s linear infinite;
+  }
+  .art-draw-slow {
+    animation-duration: 9s;
+  }
+  .art-ride {
+    animation: art-ride 6s linear infinite;
+  }
+  .art-agent {
+    animation: art-ride 9s linear infinite;
+  }
+}
+
+@keyframes arm-1 {
+  0%,
+  100% {
+    transform: rotate(-32deg);
+  }
+  50% {
+    transform: rotate(-10deg);
+  }
+}
+
+@keyframes arm-2 {
+  0%,
+  100% {
+    transform: rotate(80deg);
+  }
+  50% {
+    transform: rotate(52deg);
+  }
+}
+
+@keyframes grip-l {
+  0%,
+  100% {
+    transform: rotate(-12deg);
+  }
+  50% {
+    transform: rotate(2deg);
+  }
+}
+
+@keyframes grip-r {
+  0%,
+  100% {
+    transform: rotate(12deg);
+  }
+  50% {
+    transform: rotate(-2deg);
+  }
+}
+
+@keyframes art-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+@keyframes art-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes art-march {
+  to {
+    stroke-dashoffset: -22;
+  }
+}
+
+@keyframes art-bar {
+  from {
+    transform: scaleY(0.5);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes art-draw {
+  0% {
+    stroke-dashoffset: 1;
+  }
+  55%,
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes art-ride {
+  0% {
+    offset-distance: 0%;
+  }
+  55%,
+  100% {
+    offset-distance: 100%;
+  }
+}
+
+/* The back room: dark theme for the archive page */
+.theme-night {
+  --color-paper: #15120f;
+  --color-paper-deep: #1f1b16;
+  --color-card: #1b1814;
+  --color-ink: #efe6d2;
+  --color-ink-soft: #b9ae99;
+  --color-marker: #f3d768;
+  --color-vermilion: #ff6a4a;
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  background-image: radial-gradient(
+      1px 1px at 12% 18%,
+      rgb(239 230 210 / 0.5),
+      transparent
+    ),
+    radial-gradient(1px 1px at 78% 34%, rgb(239 230 210 / 0.4), transparent),
+    radial-gradient(1.5px 1.5px at 44% 72%, rgb(239 230 210 / 0.35), transparent),
+    radial-gradient(1px 1px at 90% 88%, rgb(239 230 210 / 0.4), transparent),
+    radial-gradient(1px 1px at 22% 92%, rgb(239 230 210 / 0.3), transparent);
+}
+
+.theme-night ::selection {
+  background: var(--color-marker);
+  color: #15120f;
+}
+
+.work-curtain {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  pointer-events: none;
+  background: #15120f;
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .work-curtain {
+    opacity: 1;
+    animation: curtain-lift 0.9s ease-out 0.05s forwards;
+  }
+}
+
+@keyframes curtain-lift {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+.archive-row {
+  transition: background-color 0.2s ease;
+}
+
+.archive-row:hover,
+.archive-row:focus-within {
+  background: rgb(239 230 210 / 0.06);
 }
