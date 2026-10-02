@@ -1,11 +1,60 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { nav, profile } from "@/data/site";
 
+const SPY_IDS = ["journey", "field-notes", "research", "selected", "certifications", "contact"];
+
+const NAV_SPY = new Set(nav.map((n) => hashOf(n.href)).filter(Boolean) as string[]);
+
+function hashOf(href: string) {
+  const i = href.indexOf("#");
+  return i === -1 ? null : href.slice(i + 1);
+}
+
 export default function SiteHeader() {
   const [open, setOpen] = useState(false);
+  const [spy, setSpy] = useState<string | null>(null);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    if (pathname !== "/") return;
+    let raf = 0;
+    const measure = () => {
+      raf = 0;
+      const line = window.innerHeight * 0.4;
+      const atBottom =
+        window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4;
+      let current: string | null = null;
+      for (const id of SPY_IDS) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        const r = el.getBoundingClientRect();
+        if (r.top <= line) current = id;
+      }
+      if (atBottom && document.getElementById("contact")) current = "contact";
+      setSpy(current && NAV_SPY.has(current) ? current : null);
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(measure);
+    };
+    raf = requestAnimationFrame(measure);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      if (raf) cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, [pathname]);
+
+  const isCurrent = (href: string) => {
+    const hash = hashOf(href);
+    if (hash) return pathname === "/" && spy === hash;
+    return pathname === href;
+  };
 
   useEffect(() => {
     if (!open) return;
@@ -32,7 +81,11 @@ export default function SiteHeader() {
           <ul className="flex items-center gap-8 text-[0.95rem] font-medium">
             {nav.map((item) => (
               <li key={item.href}>
-                <Link href={item.href} className="story-link px-0.5">
+                <Link
+                  href={item.href}
+                  className="nav-link px-0.5"
+                  aria-current={isCurrent(item.href) ? "true" : undefined}
+                >
                   {item.label}
                 </Link>
               </li>
@@ -74,7 +127,8 @@ export default function SiteHeader() {
               <Link
                 href={item.href}
                 onClick={() => setOpen(false)}
-                className="block py-3 font-display text-2xl"
+                className="nav-link-mobile block py-3 font-display text-2xl"
+                aria-current={isCurrent(item.href) ? "true" : undefined}
               >
                 {item.label}
               </Link>

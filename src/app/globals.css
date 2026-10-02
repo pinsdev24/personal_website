@@ -185,6 +185,25 @@ body {
     color: var(--color-paper);
   }
 
+  .nav-link {
+    background-image: linear-gradient(var(--color-vermilion), var(--color-vermilion));
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    background-size: 0 2px;
+    transition: background-size 0.2s ease;
+  }
+
+  .nav-link:hover,
+  .nav-link:focus-visible,
+  .nav-link[aria-current] {
+    background-size: 100% 2px;
+  }
+
+  .nav-link-mobile[aria-current] {
+    color: var(--color-vermilion);
+    font-style: italic;
+  }
+
   .draft-tag {
     display: inline-block;
     vertical-align: middle;
