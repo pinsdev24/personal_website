@@ -28,11 +28,13 @@ by `next/font` at build time, so the first build needs network access.
 
 | Route   | What it is                                                                                          |
 | ------- | --------------------------------------------------------------------------------------------------- |
-| `/`     | Cover (slim hero + robot-arm illustration), the thread with illustrated journey cards, field notes (control / robotics / RL), master's research, 3 selected projects, certifications |
+| `/`     | Cover (slim hero + robot-arm illustration), the thread with illustrated journey cards, field notes (control / robotics / RL), master's research with its published paper, selected work (sticky sidebar + scrolling projects), certifications |
 | `/work` | "The back room": a darker, themed archive of every project, with filter pills and an exit link at both ends |
 
-The work page follows a three-tier structure: a few curated projects on the
-home page, a flat filterable archive one level deeper, and a pointer to the
+The selected-work section keeps a narrow sticky left column (heading, one line,
+filter pills) while the three curated projects scroll on the right; it stacks on
+mobile. Which projects appear, and in which order, is `selected.slugs` in the
+data file. The work page follows a three-tier structure: those curated projects, a flat filterable archive one level deeper, and a pointer to the
 full GitHub for everything else. Copy, art and palette are original.
 
 ## Editing the content
@@ -51,13 +53,15 @@ Placeholder content is clearly marked:
 
 ### Image slots
 
-Each journey stop has an `image` slot: `{ src, suggestedPath, alt, caption }`.
+Each journey stop has an `image` slot: `{ src, suggestedPath, alt, caption, position? }`
+(`position` is a CSS `object-position` for photos that get cropped).
 While `src` is `null` the page shows a hatched dashed "Placeholder - image slot"
 frame displaying the suggested path. To fill one: drop the file in
 `public/images/journey/` (for example `01-valide.jpg`) and set
 `src: "/images/journey/01-valide.jpg"`. Projects use `image: { src, alt }` the
 same way (`null` shows a slot with the suggested `/images/projects/<slug>.png`).
-Certifications use `image`. Project screenshots live in `public/images/`.
+Certifications use `image`. Photos live in `public/images/journey/` and `public/images/research/`,
+project screenshots in `public/images/projects/` (WebP, about 1800px wide).
 
 ### Research and certifications
 
