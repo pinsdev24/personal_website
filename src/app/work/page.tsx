@@ -31,7 +31,7 @@ export default function WorkPage() {
           <p className="mt-5 text-lg text-ink-soft">{work.lede}</p>
         </header>
 
-        <ProjectBrowser projects={projects} variant="archive" />
+        <ProjectBrowser projects={projects} />
 
         <div className="mt-16 flex flex-col items-start justify-between gap-6 border-t-[3px] border-double border-ink pt-6 sm:flex-row sm:items-center">
           <a

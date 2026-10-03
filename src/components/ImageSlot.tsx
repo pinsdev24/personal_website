@@ -22,6 +22,7 @@ export default function ImageSlot({
               fill
               sizes={sizes}
               className="object-cover"
+              style={slot.position ? { objectPosition: slot.position } : undefined}
             />
           ) : (
             <div className="slot-empty flex h-full flex-col items-center justify-center gap-2 p-3 text-center">

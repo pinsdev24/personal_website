@@ -9,9 +9,6 @@ import {
   type Project,
 } from "@/data/site";
 import DraftTag from "./DraftTag";
-import ImageSlot from "./ImageSlot";
-
-type Variant = "feature" | "archive";
 
 function ProjectLinks({ project }: { project: Project }) {
   return (
@@ -33,75 +30,6 @@ function ProjectLinks({ project }: { project: Project }) {
         </li>
       ))}
     </ul>
-  );
-}
-
-function FeatureEntry({
-  project,
-  number,
-}: {
-  project: Project;
-  number: number;
-}) {
-  const flip = number % 2 === 0;
-  const label = categories.find((c) => c.id === project.category)?.label;
-  return (
-    <article className="grid items-center gap-6 border-t border-ink py-8 md:grid-cols-12 md:gap-10 md:py-12">
-      <div className={`md:col-span-7 ${flip ? "md:order-2" : ""}`}>
-        {project.image ? (
-          <div className="page-card overflow-hidden p-2">
-            <Image
-              src={project.image.src}
-              alt={project.image.alt}
-              width={1200}
-              height={750}
-              sizes="(min-width: 1152px) 640px, (min-width: 768px) 55vw, 92vw"
-              className="aspect-[16/10] w-full object-cover object-top"
-            />
-          </div>
-        ) : (
-          <div className="page-card p-2">
-            <ImageSlot
-              slot={{
-                src: null,
-                suggestedPath: `/images/projects/${project.slug}.png`,
-                alt: "",
-                caption: "",
-              }}
-              sizes="640px"
-            />
-          </div>
-        )}
-      </div>
-      <div className={`md:col-span-5 ${flip ? "md:order-1" : ""}`}>
-        <p className="folio flex items-center gap-3">
-          <span className="font-display text-3xl normal-case tracking-normal text-vermilion">
-            {String(number).padStart(2, "0")} /
-          </span>
-          <span>
-            {label} · {project.year}
-          </span>
-        </p>
-        <h3 className="display mt-3 text-4xl font-semibold md:text-5xl">
-          {project.title}
-          <DraftTag show={project.placeholder} />
-        </h3>
-        <p className="mt-4 text-lg text-ink-soft">{project.blurb}</p>
-        <ul className="mt-4 flex flex-wrap gap-2" aria-label="Tags">
-          {project.tags.map((t) => (
-            <li
-              key={t}
-              className="rounded-full border border-ink/60 px-2.5 py-0.5 text-xs font-semibold"
-            >
-              {t}
-            </li>
-          ))}
-        </ul>
-        <div className="mt-5">
-          <ProjectLinks project={project} />
-        </div>
-      </div>
-    </article>
   );
 }
 
@@ -162,10 +90,8 @@ function ArchiveRow({ project, number }: { project: Project; number: number }) {
 
 export default function ProjectBrowser({
   projects,
-  variant,
 }: {
   projects: readonly Project[];
-  variant: Variant;
 }) {
   const [active, setActive] = useState<CategoryId | "all">("all");
   const statusId = useId();
@@ -210,19 +136,11 @@ export default function ProjectBrowser({
         </p>
       </div>
 
-      {variant === "feature" ? (
-        <div className="mt-8 border-b border-ink">
-          {visible.map((p, i) => (
-            <FeatureEntry key={p.slug} project={p} number={i + 1} />
-          ))}
-        </div>
-      ) : (
-        <ol className="mt-8 border-b border-ink/40">
-          {visible.map((p, i) => (
-            <ArchiveRow key={p.slug} project={p} number={i + 1} />
-          ))}
-        </ol>
-      )}
+      <ol className="mt-8 border-b border-ink/40">
+        {visible.map((p, i) => (
+          <ArchiveRow key={p.slug} project={p} number={i + 1} />
+        ))}
+      </ol>
     </div>
   );
 }

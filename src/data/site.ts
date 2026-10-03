@@ -9,10 +9,9 @@
  *    redesign. Replace it with your own words, then set it to `false` (or
  *    delete the key). While `placeholder` is true, a small "draft" tag is
  *    shown next to the text on the page.
- *  - Image slots: every timeline card has an `image` with `src: null`. The
- *    page then shows a clearly marked empty frame that tells you which file
- *    to add. Drop the file in `public/` and set `src` to its path, e.g.
- *    `src: "/images/journey/valide.jpg"`.
+ *  - Image slots: a timeline card whose `image.src` is `null` shows a clearly
+ *    marked empty frame that tells you which file to add. Drop the file in
+ *    `public/` and set `src` to its path, e.g. `"/images/journey/valide.jpg"`.
  *  - To hide every draft tag and empty-slot label at once, set
  *    `showPlaceholderMarkers` to false.
  * ──────────────────────────────────────────────────────────────────────────
@@ -29,6 +28,8 @@ export type ImageSlot = {
   alt: string;
   /** Short caption printed under the picture. */
   caption: string;
+  /** CSS object-position used when the photo is cropped to fit, e.g. "50% 20%". */
+  position?: string;
 };
 
 export const profile = {
@@ -100,10 +101,10 @@ export const journey = {
       tag: "Co-founder & CTO",
       placeholder: true,
       image: {
-        src: null,
-        suggestedPath: "/images/journey/01-valide.jpg",
-        alt: "",
-        caption: "VALIDE — add a screenshot or team photo",
+        src: "/images/journey/valide.jpg",
+        suggestedPath: "/images/journey/valide.jpg",
+        alt: "Four members of the VALIDE team around a table, two of them wearing VALIDE t-shirts, smiling at the camera",
+        caption: "The VALIDE team",
       },
     },
     {
@@ -114,10 +115,10 @@ export const journey = {
       tag: "Full-stack developer",
       placeholder: true,
       image: {
-        src: null,
-        suggestedPath: "/images/journey/02-surfyn.jpg",
-        alt: "",
-        caption: "Surfyn — add a screenshot or workspace photo",
+        src: "/images/journey/building-for-others.jpg",
+        suggestedPath: "/images/journey/building-for-others.jpg",
+        alt: "Black-and-white photo of a developer wearing a beanie and headphones, seen from behind, working on two laptops under a sloping ceiling",
+        caption: "Heads down, building for other people",
       },
     },
     {
@@ -129,27 +130,13 @@ export const journey = {
       placeholder: true,
       image: {
         src: null,
-        suggestedPath: "/images/journey/03-afrik-delices.jpg",
+        suggestedPath: "/images/journey/afrik-delices.jpg",
         alt: "",
         caption: "Afrik Delices — add a product or kitchen photo",
       },
     },
     {
       page: "p. 04",
-      year: "Master's",
-      title: "Teaching machines to listen",
-      body: "Master's research at the University of Yaoundé I on self-supervised, multilingual speech representations for low-resource languages.",
-      tag: "Université de Yaoundé I (UY1)",
-      placeholder: true,
-      image: {
-        src: null,
-        suggestedPath: "/images/journey/04-uy1.jpg",
-        alt: "",
-        caption: "UY1 — add a campus, lab or defence photo",
-      },
-    },
-    {
-      page: "p. 05",
       year: "2025",
       title: "Went deep on production AI",
       body: "Agents with explicit control flow, retrieval that cites its sources, ML systems tracked from experiment to container.",
@@ -157,27 +144,28 @@ export const journey = {
       placeholder: true,
       image: {
         src: null,
-        suggestedPath: "/images/journey/05-production-ai.jpg",
+        suggestedPath: "/images/journey/production-ai.jpg",
         alt: "",
         caption: "Production AI — add a diagram or demo still",
       },
     },
     {
-      page: "p. 06",
+      page: "p. 05",
       year: "2026",
       title: "Research at Multitel",
       body: "Reinforcement learning and explainability for intelligent systems, with reproducible experiments.",
       tag: "AI engineer intern",
       placeholder: true,
       image: {
-        src: null,
-        suggestedPath: "/images/journey/06-multitel.jpg",
-        alt: "",
-        caption: "Multitel — add a lab or experiment photo",
+        src: "/images/journey/multitel.jpg",
+        suggestedPath: "/images/journey/multitel.jpg",
+        alt: "Standing in front of the Multitel building, hands in pockets",
+        caption: "Outside Multitel",
+        position: "50% 18%",
       },
     },
     {
-      page: "p. 07",
+      page: "p. 06",
       year: "Next",
       title: "Your page here?",
       body: "This last page is intentionally blank. Tell me what you are building.",
@@ -185,7 +173,7 @@ export const journey = {
       placeholder: true,
       image: {
         src: null,
-        suggestedPath: "/images/journey/07-next.jpg",
+        suggestedPath: "/images/journey/next.jpg",
         alt: "",
         caption: "Optional — add a closing image",
       },
@@ -237,7 +225,11 @@ export const fieldNotes = {
   ],
 } as const;
 
-/** The master's research block. Title and institution are factual. */
+/**
+ * The master's research block. Title, institution, supervisor and paper
+ * details are verified (see `paper.sources`); the English title of the thesis
+ * and the master's period are still yours to confirm.
+ */
 export const research = {
   kicker: "Research",
   heading: "The thesis",
@@ -249,18 +241,63 @@ export const research = {
   institution: "Université de Yaoundé I (UY1)",
   degree: "Master's research",
   abstract:
-    "Learning what speech sounds like without labelled transcripts, across several languages, for languages that have very little annotated data.",
+    "How do you teach a model what speech sounds like when there are almost no transcripts? By letting it learn from raw audio first, and by pooling several African languages so each one helps the others.",
   keywords: [
     "Self-supervised learning",
     "Speech representations",
     "Multilingual",
     "Low-resource languages",
   ],
-  /** Fields you still need to provide. Leave `value` empty to show a marked slot. */
+  /** The picture is yours; the caption only states what is visible on it. */
+  photo: {
+    src: "/images/research/cri2023-presentation.jpg",
+    alt: "Black-and-white photo of the author presenting at CRI'2023, with a slide about Contrastive Predictive Coding behind him",
+    caption: "Presenting the paper at CRI'2023, Yaoundé",
+    width: 1400,
+    height: 1419,
+  },
+  /** The paper that came out of the research. Checked against the sources below. */
+  paper: {
+    label: "Published paper",
+    title:
+      "Self-supervised and Multilingual Learning Applied to the Wolof, Swahili and Fongbe",
+    authors: "Prestilien Djionang Pindoh, Paulin Melatagia Yonta",
+    venue:
+      "CRI 2023 (6th Conference on Research in Computer Science), Yaoundé, 12–13 December 2023",
+    proceedings:
+      "Research in Computer Science, Springer CCIS, pp. 80–91",
+    summary:
+      "Contrastive Predictive Coding, wav2vec and a bidirectional CPC, trained with multilingual learning on Wolof, Swahili and Fongbe, then tested on speech recognition with a DeepSpeech-like model.",
+    results: [
+      { language: "Fongbe", wer: "61%" },
+      { language: "Wolof", wer: "72%" },
+      { language: "Swahili", wer: "88%" },
+    ],
+    resultsNote: "Word error rate on the ASR task",
+    sources: [
+      {
+        label: "Springer proceedings",
+        href: "https://link.springer.com/book/10.1007/978-3-031-63110-8",
+      },
+      {
+        label: "Extended version (ARIMA journal)",
+        href: "https://arima.episciences.org/en/articles/13416",
+      },
+      {
+        label: "CRI'2023 accepted papers",
+        href: "http://cri-info.cm/?page_id=270",
+      },
+    ],
+  },
+  /** Facts first; empty `value` shows a marked slot for what you still need to provide. */
   details: [
-    { label: "Year", value: "", hint: "e.g. 2024–2025" },
-    { label: "Supervisor", value: "", hint: "name of your supervisor" },
-    { label: "Models / data", value: "", hint: "e.g. wav2vec 2.0, corpora used" },
+    { label: "Year", value: "", hint: "master's period, e.g. 2022–2023" },
+    { label: "Supervisor", value: "Paulin Melatagia Yonta", hint: "" },
+    {
+      label: "Models / data",
+      value: "CPC, wav2vec, bidirectional CPC · ALFFA corpora",
+      hint: "",
+    },
     { label: "Thesis link", value: "", hint: "URL of the PDF or repository" },
   ],
   placeholder: true,
@@ -326,8 +363,6 @@ export type Project = {
   /** null = an empty, marked image slot. */
   image: { src: string; alt: string } | null;
   links: ReadonlyArray<{ label: string; href: string }>;
-  /** Appears in the curated "Selected work" tier on the home page. */
-  featured?: boolean;
   placeholder?: boolean;
 };
 
@@ -342,7 +377,7 @@ export const projects: readonly Project[] = [
     year: "2025",
     tags: ["LangGraph", "Multi-agent", "Human-in-the-loop"],
     image: {
-      src: "/images/ariadne-agent-website.png",
+      src: "/images/projects/ariadne.webp",
       alt: "Screenshot of the Ariadne AI career platform",
     },
     links: [
@@ -351,7 +386,6 @@ export const projects: readonly Project[] = [
         href: "https://career-agent-production-be19.up.railway.app",
       },
     ],
-    featured: true,
   },
   {
     slug: "mlops-fraud-detection",
@@ -372,7 +406,6 @@ export const projects: readonly Project[] = [
         href: "https://github.com/pinsdev24/mlops-fraud-detection",
       },
     ],
-    featured: true,
   },
   {
     slug: "afrik-delices",
@@ -388,7 +421,6 @@ export const projects: readonly Project[] = [
       alt: "Screenshot of the Afrik Delices website",
     },
     links: [{ label: "See it live", href: "https://afrikdelices.com/" }],
-    featured: true,
   },
   {
     slug: "studenthub",
@@ -400,7 +432,7 @@ export const projects: readonly Project[] = [
     year: "2025",
     tags: ["RAG", "PDF processing", "Citations"],
     image: {
-      src: "/images/studenthub.png",
+      src: "/images/projects/studenthub.webp",
       alt: "Screenshot of the StudentHub academic assistant",
     },
     links: [
@@ -414,11 +446,18 @@ export const projects: readonly Project[] = [
     kind: "Master's research",
     blurb:
       "Self-supervised, multilingual speech representation learning for languages with little labelled data.",
-    year: "Master's",
+    year: "2023",
     tags: ["Self-supervised", "Speech", "Multilingual"],
-    image: null,
-    links: [],
-    placeholder: true,
+    image: {
+      src: "/images/research/cri2023-presentation.jpg",
+      alt: "Presenting the speech representation paper at CRI'2023",
+    },
+    links: [
+      {
+        label: "Read the paper",
+        href: "https://link.springer.com/book/10.1007/978-3-031-63110-8",
+      },
+    ],
   },
   {
     slug: "multitel-rl-xai",
@@ -504,8 +543,12 @@ export const projects: readonly Project[] = [
 
 export const selected = {
   kicker: "Selected work",
-  title: "A few things, chosen on purpose.",
-  lede: "Three to start with. The back room has the rest.",
+  titleStart: "A few things,",
+  titleEmphasis: "chosen on purpose.",
+  lede: "Agents, ML and products, built end to end.",
+  filterLabel: "Show me",
+  /** The curated tier on the home page, in display order (project slugs). */
+  slugs: ["afrik-delices", "ariadne-ai", "studenthub"],
   seeMore: "Interested? There is more — open the archive",
   placeholder: true,
 } as const;
