@@ -17,13 +17,13 @@ export default function ImageSlot({
   return (
     <figure className={`slot tape ${className}`}>
       <div className={`slot-frame relative ${aspect} overflow-hidden border border-ink/70`}>
-        <div className="slot-inner absolute inset-0">
+        <div className={`slot-inner absolute inset-0 ${slot.fit === "contain" ? "bg-white" : ""}`}>
           <Image
             src={slot.src}
             alt={slot.alt}
             fill
             sizes={sizes}
-            className="object-cover"
+            className={slot.fit === "contain" ? "object-contain" : "object-cover"}
             style={slot.position ? { objectPosition: slot.position } : undefined}
           />
         </div>

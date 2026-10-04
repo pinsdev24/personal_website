@@ -16,6 +16,8 @@ export type ImageSlot = {
   caption: string;
   /** CSS object-position used when the photo is cropped to fit, e.g. "50% 20%". */
   position?: string;
+  /** "contain" shows the whole picture (diagrams) instead of cropping it. */
+  fit?: "contain";
 };
 
 export const profile = {
@@ -107,7 +109,11 @@ export const journey = {
       title: "Started Afrik Delices",
       body: "A food-tech platform for authentic African recipes. I own the product direction and the engineering.",
       tag: "Founder, product engineer",
-      image: null,
+      image: {
+        src: "/images/journey/afrik-delices-phones.png",
+        alt: "Three phones showing the Afrik Delices app: the meal planner, the home feed with Ndolè Royal, and the Chef Delice assistant",
+        caption: "Afrik Delices: meal planner, home and Chef Delice",
+      },
     },
     {
       page: "p. 04",
@@ -115,7 +121,12 @@ export const journey = {
       title: "Went deep on production AI",
       body: "Agents with explicit control flow, retrieval that cites its sources, ML systems tracked from experiment to container.",
       tag: "LangGraph · RAG · MLOps",
-      image: null,
+      image: {
+        src: "/images/journey/production-ai-agent-loop.png",
+        alt: "Hand-drawn agent loop: a user query goes to the agent, which decides whether it needs a tool such as search, web search, a database or an API, observes the result, and loops until it gives a final answer",
+        caption: "The agent loop: decide, call a tool, observe, answer",
+        fit: "contain",
+      },
     },
     {
       page: "p. 05",
