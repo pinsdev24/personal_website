@@ -32,9 +32,9 @@ function lengthAtY(ys: number[], length: number, y: number) {
 
 const DOODLES = [
   { cls: "-left-20 top-[9%]", depth: -70, spin: 220, kind: "star" },
-  { cls: "-right-20 top-[27%]", depth: -120, spin: -90, kind: "disc" },
+  { cls: "-right-24 top-[27%]", depth: -120, spin: -90, kind: "disc" },
   { cls: "-left-16 top-[56%]", depth: -50, spin: 60, kind: "squiggle" },
-  { cls: "-right-16 top-[72%]", depth: -90, spin: 140, kind: "flag" },
+  { cls: "-right-28 top-[72%]", depth: -90, spin: 140, kind: "flag" },
 ] as const;
 
 function Doodle({ kind }: { kind: (typeof DOODLES)[number]["kind"] }) {
