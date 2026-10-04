@@ -204,24 +204,6 @@ body {
     font-style: italic;
   }
 
-  .draft-tag {
-    display: inline-block;
-    vertical-align: middle;
-    margin-left: 0.5em;
-    padding: 0.05rem 0.45rem;
-    border: 1px dashed var(--color-vermilion);
-    border-radius: 3px;
-    font-family: var(--font-sans);
-    font-style: normal;
-    font-size: 0.62rem;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    line-height: 1.5;
-    color: var(--color-vermilion);
-    background: rgb(192 54 27 / 0.06);
-  }
-
   .page-card {
     background: var(--color-card);
     border: 1.5px solid var(--color-ink);
@@ -263,6 +245,29 @@ body {
   transform: translateY(28px) rotate(var(--tilt, 0deg));
 }
 
+.spread-photo {
+  transform: rotate(calc(var(--tilt, 0deg) * -1.6));
+  transition:
+    opacity 0.7s ease,
+    transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.js-thread .thread-stop[data-reached="false"] .spread-photo {
+  opacity: 0;
+  transform: translateY(48px) rotate(calc(var(--tilt, 0deg) * 2.4)) scale(0.96);
+}
+
+.spread-year {
+  font-family: var(--font-display);
+  font-size: clamp(6rem, 11vw, 9.5rem);
+  font-weight: 600;
+  font-style: italic;
+  line-height: 0.85;
+  letter-spacing: -0.03em;
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--color-vermilion);
+}
+
 .slot-inner {
   transition: clip-path 1s cubic-bezier(0.6, 0, 0.2, 1) 0.15s;
 }
@@ -287,18 +292,6 @@ body {
   transform: rotate(-3deg);
   background: rgb(243 215 104 / 0.78);
   box-shadow: 0 1px 2px rgb(28 24 20 / 0.25);
-}
-
-.slot-empty {
-  background:
-    repeating-linear-gradient(
-      135deg,
-      transparent 0 9px,
-      rgb(192 54 27 / 0.1) 9px 10px
-    ),
-    var(--color-paper-deep);
-  outline: 2px dashed var(--color-vermilion);
-  outline-offset: -8px;
 }
 
 .stop-hole::after {
@@ -370,6 +363,7 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .thread-card,
+  .spread-photo,
   .slot-inner,
   .hole-x,
   .hole-ring,
@@ -384,6 +378,11 @@ body {
 
   .js-thread .thread-stop[data-reached="false"] .slot-inner {
     clip-path: none;
+  }
+
+  .js-thread .thread-stop[data-reached="false"] .spread-photo {
+    opacity: 1;
+    transform: rotate(calc(var(--tilt, 0deg) * -1.6));
   }
 }
 

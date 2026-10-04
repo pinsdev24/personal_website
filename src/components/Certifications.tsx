@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { certifications } from "@/data/site";
-import DraftTag from "./DraftTag";
 import Reveal from "./Reveal";
 
 export default function Certifications() {
@@ -17,7 +16,6 @@ export default function Certifications() {
           className="display mt-3 text-4xl font-semibold sm:text-5xl md:text-6xl"
         >
           {certifications.title}
-          <DraftTag show={certifications.placeholder} />
         </h2>
         <p className="mt-4 text-lg text-ink-soft">{certifications.lede}</p>
       </Reveal>

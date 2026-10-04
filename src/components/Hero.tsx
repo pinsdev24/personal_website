@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { hero } from "@/data/site";
-import DraftTag from "./DraftTag";
 import { RobotArm } from "./art/Illustrations";
 
 export default function Hero() {
@@ -15,7 +14,6 @@ export default function Hero() {
             {hero.headline.before}{" "}
             <em className="marker font-medium">{hero.headline.emphasis}</em>
             {hero.headline.after}
-            <DraftTag show={hero.placeholder} />
           </h1>
           <p className="mt-6 max-w-md text-xl leading-snug text-ink-soft md:text-2xl">
             {hero.intro}

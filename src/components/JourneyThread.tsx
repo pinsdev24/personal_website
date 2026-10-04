@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { journey } from "@/data/site";
-import DraftTag from "./DraftTag";
 import ImageSlot from "./ImageSlot";
 
 type Geometry = {
@@ -117,7 +116,7 @@ export default function JourneyThread() {
     if (pts.length < 2) return;
 
     const wide = rect.width >= 768;
-    const sway = wide ? 78 : 12;
+    const sway = wide ? 110 : 12;
     const lead = { x: pts[0].x, y: pts[0].y - 56 };
     let d = `M ${lead.x.toFixed(1)} 0 L ${lead.x.toFixed(1)} ${lead.y.toFixed(1)}`;
     let prev = lead;
@@ -264,7 +263,6 @@ export default function JourneyThread() {
             className="display mt-3 text-4xl font-semibold sm:text-5xl md:text-6xl"
           >
             {journey.title}
-            <DraftTag show={journey.placeholder} />
           </h2>
           <p className="mx-auto mt-5 max-w-lg text-lg text-ink-soft">
             {journey.lede}
@@ -370,10 +368,18 @@ export default function JourneyThread() {
             )}
           </svg>
 
-          <ol className="relative z-10 space-y-12 md:space-y-6">
+          <ol className="relative z-10 space-y-12 md:space-y-28">
             {journey.stops.map((stop, i) => {
               const right = i % 2 === 0;
               const on = reached >= i || !enhanced;
+              const bigYear = (
+                <p
+                  aria-hidden="true"
+                  className={`spread-year hidden md:block ${right ? "" : "md:text-right"}`}
+                >
+                  {stop.year}
+                </p>
+              );
               return (
                 <li
                   key={stop.page}
@@ -381,14 +387,14 @@ export default function JourneyThread() {
                   style={
                     { "--tilt": `${right ? 1.4 : -1.4}deg` } as React.CSSProperties
                   }
-                  className="thread-stop relative pl-12 md:grid md:grid-cols-2 md:pb-10 md:pl-0"
+                  className="thread-stop relative pl-12 md:grid md:min-h-[26rem] md:grid-cols-2 md:items-center md:pl-0"
                 >
                   <span
                     ref={(el) => {
                       anchorRefs.current[i] = el;
                     }}
                     aria-hidden="true"
-                    className="stop-hole absolute left-[3px] top-9 z-20 block h-[22px] w-[22px] md:left-1/2 md:-ml-[11px]"
+                    className="stop-hole absolute left-[3px] top-9 z-20 block h-[22px] w-[22px] md:left-1/2 md:top-1/2 md:-ml-[11px] md:-mt-[11px]"
                   >
                     <svg viewBox="0 0 22 22" className="h-full w-full" fill="none" strokeLinecap="round">
                       <circle className="hole-ring" cx="11" cy="11" r="10" />
@@ -396,28 +402,57 @@ export default function JourneyThread() {
                       <path className="hole-x" d="M5 5l12 12M17 5L5 17" pathLength={1} />
                     </svg>
                   </span>
-                  <article
-                    className={`thread-card page-card relative p-5 md:p-6 ${
-                      right ? "md:col-start-2 md:ml-14" : "md:col-start-1 md:mr-14"
+
+                  <div
+                    className={`spread-photo hidden md:row-start-1 md:block ${
+                      right ? "md:col-start-1 md:mr-20" : "md:col-start-2 md:ml-20"
                     }`}
                   >
-                    <ImageSlot
-                      slot={stop.image}
-                      sizes="(min-width: 1152px) 480px, (min-width: 768px) 40vw, 80vw"
-                      className="mb-5"
-                    />
-                    <div className="flex items-baseline justify-between gap-4">
+                    {stop.image ? (
+                      <div className="page-card p-3 pb-4">
+                        <ImageSlot
+                          slot={stop.image}
+                          aspect="aspect-[5/4]"
+                          sizes="(min-width: 1152px) 460px, 40vw"
+                          captionClassName="hand mt-3 text-center text-2xl"
+                        />
+                      </div>
+                    ) : (
+                      bigYear
+                    )}
+                  </div>
+
+                  <article
+                    className={`thread-card page-card relative p-5 md:row-start-1 md:border-0 md:bg-transparent md:p-0 md:shadow-none ${
+                      right ? "md:col-start-2 md:ml-20" : "md:col-start-1 md:mr-20 md:text-right"
+                    }`}
+                  >
+                    {stop.image && (
+                      <ImageSlot
+                        slot={stop.image}
+                        sizes="80vw"
+                        className="mb-5 md:hidden"
+                      />
+                    )}
+                    {stop.image && bigYear}
+                    <div className="flex items-baseline justify-between gap-4 md:hidden">
                       <p className="folio">{stop.page}</p>
                       <p className="font-display text-3xl font-semibold italic text-vermilion">
                         {stop.year}
                       </p>
                     </div>
-                    <h3 className="display mt-3 text-2xl font-semibold md:text-3xl">
+                    <p className="folio hidden md:mt-4 md:block">
+                      {stop.page} · {stop.year}
+                    </p>
+                    <h3 className="display mt-3 text-2xl font-semibold md:mt-2 md:text-4xl lg:text-[2.75rem]">
                       {stop.title}
-                      <DraftTag show={stop.placeholder} />
                     </h3>
-                    <p className="mt-3 text-ink-soft">{stop.body}</p>
-                    <p className="mt-4 inline-block border-t border-ink pt-2 text-sm font-semibold">
+                    <p
+                      className={`mt-3 text-ink-soft md:mt-4 md:max-w-md md:text-lg ${right ? "" : "md:ml-auto"}`}
+                    >
+                      {stop.body}
+                    </p>
+                    <p className="mt-4 inline-block border-t border-ink pt-2 text-sm font-semibold md:mt-5 md:border-t-2 md:border-vermilion md:text-base">
                       {stop.tag}
                     </p>
                   </article>

@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { contact, profile } from "@/data/site";
-import DraftTag from "./DraftTag";
 
 export default function SiteFooter() {
   return (
@@ -25,7 +24,6 @@ export default function SiteFooter() {
           <p className="folio">{contact.kicker}</p>
           <h2 className="display mt-3 text-4xl sm:text-5xl md:text-6xl">
             {contact.title}
-            <DraftTag show={contact.placeholder} />
           </h2>
           <p className="mt-5 max-w-xl text-lg text-ink-soft">{contact.body}</p>
           <p className="mt-6">

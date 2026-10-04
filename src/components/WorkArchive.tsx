@@ -6,12 +6,10 @@ import {
   categories,
   projects,
   selected,
-  showPlaceholderMarkers,
   work,
   type CategoryId,
   type Project,
 } from "@/data/site";
-import DraftTag from "./DraftTag";
 import { GridWorld } from "./art/Illustrations";
 
 const ILLUSTRATIONS = { rl: GridWorld } as const;
@@ -76,12 +74,7 @@ function Visual({ project, wide }: { project: Project; wide: boolean }) {
       </div>
     );
   }
-  if (!showPlaceholderMarkers) return null;
-  return (
-    <div className={`slot-empty flex items-center justify-center border-b border-ink/50 p-3 text-center ${ratio}`}>
-      <p className="folio !text-vermilion">Placeholder · image slot</p>
-    </div>
-  );
+  return null;
 }
 
 function Card({
@@ -115,7 +108,6 @@ function Card({
             className={`display mt-2 font-semibold leading-tight ${wide ? "text-3xl md:text-4xl" : "text-2xl"}`}
           >
             {project.title}
-            <DraftTag show={project.placeholder} />
           </h3>
           <p className="mt-1 text-sm italic text-ink-soft">{project.kind}</p>
           <p className="mt-3 text-[0.97rem] text-ink-soft">{project.blurb}</p>

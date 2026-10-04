@@ -2,29 +2,15 @@
  * ──────────────────────────────────────────────────────────────────────────
  *  EVERYTHING EDITABLE LIVES IN THIS FILE.
  *
- *  - Facts (names, links, dates, screenshots, certificates) were carried over
- *    from the previous version of this portfolio found in the repo, or given
- *    by the owner (master's thesis title).
- *  - Wording flagged `placeholder: true` is DRAFT copy written for this
- *    redesign. Replace it with your own words, then set it to `false` (or
- *    delete the key). While `placeholder` is true, a small "draft" tag is
- *    shown next to the text on the page.
- *  - Image slots: a timeline card whose `image.src` is `null` shows a clearly
- *    marked empty frame that tells you which file to add. Drop the file in
- *    `public/` and set `src` to its path, e.g. `"/images/journey/valide.jpg"`.
- *  - To hide every draft tag and empty-slot label at once, set
- *    `showPlaceholderMarkers` to false.
+ *  Copy, links, dates, images and certificates for every section. Photos live
+ *  in `public/images/`; point an `image.src` at a file there to show it.
  * ──────────────────────────────────────────────────────────────────────────
  */
 
-export const showPlaceholderMarkers = true;
-
 export type ImageSlot = {
-  /** Public path of the image (e.g. "/images/journey/valide.jpg"). null = show an empty slot. */
-  src: string | null;
-  /** Where to put the file. Only used to label the empty slot. */
-  suggestedPath: string;
-  /** Describe the picture for screen readers once you add one. */
+  /** Public path of the image, e.g. "/images/journey/valide.jpg". */
+  src: string;
+  /** Describes the picture for screen readers. */
   alt: string;
   /** Short caption printed under the picture. */
   caption: string;
@@ -53,7 +39,7 @@ export const profile = {
   seo: {
     title: "Prestilien Pindoh — AI/ML & software engineer",
     description:
-      "Agents, reinforcement learning, speech and control: an editorial portfolio of systems built to survive production.",
+      "AI/ML and software engineer in Brussels. Agents, ML systems, products, and published research on speech for low-resource African languages.",
   },
 } as const;
 
@@ -70,17 +56,16 @@ export const nav = [
 export const hero = {
   /** Headline is split so the middle part can be set in italic + highlighter. */
   headline: {
-    before: "I build AI that",
-    emphasis: "survives production",
-    after: ".",
+    before: "I love building",
+    emphasis: "useful AI",
+    after: " and products.",
   },
-  intro: "Agents, reinforcement learning and the systems that keep them honest.",
+  intro: "Agents, ML systems and the products around them, built end to end.",
   note: "scroll — follow the thread",
   cta: [
     { label: "Follow the thread", href: "/#journey", kind: "solid" },
     { label: "All work", href: "/work", kind: "ghost" },
   ],
-  placeholder: true,
 } as const;
 
 /**
@@ -91,7 +76,6 @@ export const journey = {
   kicker: "The thread",
   title: "Sewn together, one page at a time.",
   lede: "A zine is held together by a single stitch. Scroll and watch the needle pass through each chapter.",
-  placeholder: true,
   stops: [
     {
       page: "p. 01",
@@ -99,10 +83,8 @@ export const journey = {
       title: "Co-founded VALIDE",
       body: "Set the technical direction of an education product, from the first architecture sketches to AI-assisted learning.",
       tag: "Co-founder & CTO",
-      placeholder: true,
       image: {
         src: "/images/journey/valide.jpg",
-        suggestedPath: "/images/journey/valide.jpg",
         alt: "Four members of the VALIDE team around a table, two of them wearing VALIDE t-shirts, smiling at the camera",
         caption: "The VALIDE team",
       },
@@ -113,10 +95,8 @@ export const journey = {
       title: "Shipped for other people",
       body: "Full-stack work at Surfyn: web, mobile and backend features, polished on the outside and dependable underneath.",
       tag: "Full-stack developer",
-      placeholder: true,
       image: {
         src: "/images/journey/building-for-others.jpg",
-        suggestedPath: "/images/journey/building-for-others.jpg",
         alt: "Black-and-white photo of a developer wearing a beanie and headphones, seen from behind, working on two laptops under a sloping ceiling",
         caption: "Heads down, building for other people",
       },
@@ -127,13 +107,7 @@ export const journey = {
       title: "Started Afrik Delices",
       body: "A food-tech platform for authentic African recipes. I own the product direction and the engineering.",
       tag: "Founder, product engineer",
-      placeholder: true,
-      image: {
-        src: null,
-        suggestedPath: "/images/journey/afrik-delices.jpg",
-        alt: "",
-        caption: "Afrik Delices — add a product or kitchen photo",
-      },
+      image: null,
     },
     {
       page: "p. 04",
@@ -141,13 +115,7 @@ export const journey = {
       title: "Went deep on production AI",
       body: "Agents with explicit control flow, retrieval that cites its sources, ML systems tracked from experiment to container.",
       tag: "LangGraph · RAG · MLOps",
-      placeholder: true,
-      image: {
-        src: null,
-        suggestedPath: "/images/journey/production-ai.jpg",
-        alt: "",
-        caption: "Production AI — add a diagram or demo still",
-      },
+      image: null,
     },
     {
       page: "p. 05",
@@ -155,10 +123,8 @@ export const journey = {
       title: "Research at Multitel",
       body: "Reinforcement learning and explainability for intelligent systems, with reproducible experiments.",
       tag: "AI engineer intern",
-      placeholder: true,
       image: {
         src: "/images/journey/multitel.jpg",
-        suggestedPath: "/images/journey/multitel.jpg",
         alt: "Standing in front of the Multitel building, hands in pockets",
         caption: "Outside Multitel",
         position: "50% 18%",
@@ -169,15 +135,13 @@ export const journey = {
   kicker: string;
   title: string;
   lede: string;
-  placeholder: boolean;
   stops: ReadonlyArray<{
     page: string;
     year: string;
     title: string;
     body: string;
     tag: string;
-    placeholder: boolean;
-    image: ImageSlot;
+    image: ImageSlot | null;
   }>;
 };
 
@@ -185,28 +149,24 @@ export const journey = {
 export const fieldNotes = {
   kicker: "Field notes",
   title: "Three things I cannot stop thinking about.",
-  placeholder: true,
   figures: [
     {
       id: "control",
       fig: "Fig. 1",
       title: "System control",
       body: "Close the loop, measure the error, stay stable. The oldest good idea in engineering.",
-      placeholder: true,
     },
     {
       id: "rover",
       fig: "Fig. 2",
       title: "Robotics",
       body: "Where software finally has to meet gravity, noise and a floor that is not flat.",
-      placeholder: true,
     },
     {
       id: "rl",
       fig: "Fig. 3",
       title: "Reinforcement learning",
       body: "Try, get rewarded, try again. Learning from consequences instead of labels.",
-      placeholder: true,
     },
   ],
 } as const;
@@ -282,7 +242,6 @@ export const certifications = {
   kicker: "Certifications",
   title: "The paperwork, framed.",
   lede: "Credentials I have earned, each one verifiable.",
-  placeholder: true,
   items: [
     {
       title: "AWS Certified Developer — Associate",
@@ -333,7 +292,6 @@ export type Project = {
   /** Original drawing shown when there is no image yet. */
   illustration?: "rl";
   links: ReadonlyArray<{ label: string; href: string }>;
-  placeholder?: boolean;
 };
 
 export const projects: readonly Project[] = [
@@ -443,7 +401,6 @@ export const projects: readonly Project[] = [
     image: null,
     illustration: "rl",
     links: [],
-    placeholder: true,
   },
   {
     slug: "vente-pro",
@@ -523,7 +480,6 @@ export const selected = {
   /** The curated tier on the home page, in display order (project slugs). */
   slugs: ["afrik-delices", "ariadne-ai", "studenthub"],
   seeMore: "Interested? There is more — open the archive",
-  placeholder: true,
 } as const;
 
 /**
@@ -547,12 +503,10 @@ export const work = {
   exitTop: "Back to the cover",
   exitBottom: "Back up to the cover",
   githubCta: "Still more on GitHub",
-  placeholder: true,
 } as const;
 
 export const contact = {
   kicker: "Colophon",
   title: "Who made this? Oh, hi.",
-  body: "I am a developer in Brussels who likes systems that keep working after the demo. If you are building something that needs to survive production, write to me.",
-  placeholder: true,
+  body: "I'm an AI/ML and software engineer in Brussels. I love building useful AI and the products around it, from agents and ML pipelines to web and mobile apps. If you're working on something like that, write to me.",
 } as const;

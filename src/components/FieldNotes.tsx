@@ -1,5 +1,4 @@
 import { fieldNotes } from "@/data/site";
-import DraftTag from "./DraftTag";
 import Reveal from "./Reveal";
 import { ControlLoop, GridWorld, RoverLidar } from "./art/Illustrations";
 
@@ -23,7 +22,6 @@ export default function FieldNotes() {
           className="display mt-3 text-4xl font-semibold sm:text-5xl md:text-6xl"
         >
           {fieldNotes.title}
-          <DraftTag show={fieldNotes.placeholder} />
         </h2>
       </Reveal>
 
@@ -41,7 +39,6 @@ export default function FieldNotes() {
                     <p className="folio">{f.fig}</p>
                     <p className="display mt-1 text-2xl font-semibold">
                       {f.title}
-                      <DraftTag show={f.placeholder} />
                     </p>
                     <p className="mt-2 text-[0.97rem] text-ink-soft">{f.body}</p>
                   </figcaption>

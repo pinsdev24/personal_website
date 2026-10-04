@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import WorkArchive, { WorkStats } from "@/components/WorkArchive";
-import DraftTag from "@/components/DraftTag";
 import { githubArchive, work } from "@/data/site";
 
 export const metadata: Metadata = {
@@ -27,7 +26,6 @@ export default function WorkPage() {
           <div className="md:col-span-7">
             <h1 className="display text-5xl font-semibold sm:text-6xl md:text-7xl">
               {work.title}
-              <DraftTag show={work.placeholder} />
             </h1>
             <p className="mt-5 max-w-xl text-lg text-ink-soft">{work.lede}</p>
           </div>

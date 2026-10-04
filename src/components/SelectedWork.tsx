@@ -10,8 +10,6 @@ import {
   type CategoryId,
   type Project,
 } from "@/data/site";
-import DraftTag from "./DraftTag";
-import ImageSlot from "./ImageSlot";
 import Reveal from "./Reveal";
 
 function Entry({ project, number }: { project: Project; number: number }) {
@@ -20,7 +18,7 @@ function Entry({ project, number }: { project: Project; number: number }) {
   return (
     <Reveal as="article" className="group">
       <div className="relative">
-        {project.image ? (
+        {project.image && (
           <div className="page-card overflow-hidden">
             <Image
               src={project.image.src}
@@ -31,16 +29,6 @@ function Entry({ project, number }: { project: Project; number: number }) {
               className="aspect-[2/1] w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.02]"
             />
           </div>
-        ) : (
-          <ImageSlot
-            slot={{
-              src: null,
-              suggestedPath: `/images/projects/${project.slug}.webp`,
-              alt: "",
-              caption: "",
-            }}
-            sizes="740px"
-          />
         )}
         {link && (
           <a
@@ -67,7 +55,6 @@ function Entry({ project, number }: { project: Project; number: number }) {
           </p>
           <h3 className="display mt-2 text-3xl font-semibold md:text-4xl">
             {project.title}
-            <DraftTag show={project.placeholder} />
           </h3>
           <p className="mt-2 max-w-xl text-lg text-ink-soft">{project.blurb}</p>
         </div>
@@ -119,7 +106,6 @@ export default function SelectedWork() {
           <div className="md:sticky md:top-[3.4rem] md:flex md:h-[calc(100svh-3.4rem)] md:flex-col md:justify-center">
             <p className="folio">
               {selected.kicker}
-              <DraftTag show={selected.placeholder} />
             </p>
             <h2
               id="selected-title"
