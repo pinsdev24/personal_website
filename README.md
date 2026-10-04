@@ -113,7 +113,7 @@ with CSS only (transform, offset-path, stroke-dash) and are static under
 src/
   app/            routes (/, /work), layout, global styles, sitemap
   components/     SiteHeader, Hero, JourneyThread, FieldNotes, Research,
-                  Certifications, ProjectBrowser, ImageSlot, art/Illustrations
+                  Certifications, SelectedWork, WorkArchive, ImageSlot, art/Illustrations
   data/site.ts    <- all editable content
   legacy/         previous portfolio components (voice agent, chat widget, ...)
   db/, app/api/   previous chat backend, untouched (db client is now lazy)

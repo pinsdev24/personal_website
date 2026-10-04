@@ -273,8 +273,14 @@ export function GridWorld(props: Omit<ArtProps, "label"> & { label?: string }) {
 }
 
 /** Speech waveform encoded into multilingual embedding clusters. */
-export function SpeechEmbedding(props: Omit<ArtProps, "label"> & { label?: string }) {
-  const { label = "A speech waveform encoded into clusters of embeddings for several languages", ...rest } = props;
+export function SpeechEmbedding(
+  props: Omit<ArtProps, "label"> & { label?: string; numbered?: boolean },
+) {
+  const {
+    label = "A speech waveform encoded into clusters of embeddings for several languages",
+    numbered = false,
+    ...rest
+  } = props;
   const bars = Array.from({ length: 44 }, (_, i) => {
     const env = Math.sin((i / 43) * Math.PI) ** 0.8;
     const h = 8 + env * (26 + 22 * Math.abs(Math.sin(i * 1.7) * Math.cos(i * 0.6)));
@@ -328,6 +334,27 @@ export function SpeechEmbedding(props: Omit<ArtProps, "label"> & { label?: strin
         <text x="296" y="64">f(θ)</text>
         <text x="410" y="205">no labels needed</text>
       </g>
+      {numbered &&
+        [
+          { n: 1, x: 26, y: 38 },
+          { n: 2, x: 315, y: 170 },
+          { n: 3, x: 482, y: 34 },
+        ].map((b) => (
+          <g key={b.n}>
+            <circle cx={b.x} cy={b.y} r="11" fill={INK} />
+            <text
+              x={b.x}
+              y={b.y + 5}
+              textAnchor="middle"
+              fontFamily="var(--font-sans)"
+              fontSize="14"
+              fontWeight="700"
+              fill={CARD}
+            >
+              {b.n}
+            </text>
+          </g>
+        ))}
     </Svg>
   );
 }

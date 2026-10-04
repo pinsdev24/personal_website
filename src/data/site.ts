@@ -164,20 +164,6 @@ export const journey = {
         position: "50% 18%",
       },
     },
-    {
-      page: "p. 06",
-      year: "Next",
-      title: "Your page here?",
-      body: "This last page is intentionally blank. Tell me what you are building.",
-      tag: "Open to roles",
-      placeholder: true,
-      image: {
-        src: null,
-        suggestedPath: "/images/journey/next.jpg",
-        alt: "",
-        caption: "Optional — add a closing image",
-      },
-    },
   ],
 } as const satisfies {
   kicker: string;
@@ -226,29 +212,58 @@ export const fieldNotes = {
 } as const;
 
 /**
- * The master's research block. Title, institution, supervisor and paper
- * details are verified (see `paper.sources`); the English title of the thesis
- * and the master's period are still yours to confirm.
+ * Research: the paper that came out of the master's thesis. Every fact here
+ * is checked against the two DOIs in `links`.
  */
 export const research = {
   kicker: "Research",
-  heading: "The thesis",
-  /** Original French title, kept verbatim. */
+  label: "Published paper",
   title:
+    "Self-supervised and Multilingual Learning Applied to the Wolof, Swahili and Fongbe",
+  authors: "Prestilien Djionang Pindoh, Paulin Melatagia Yonta",
+  venue:
+    "CRI 2023, 6th Conference on Research in Computer Science · Yaoundé, December 2023",
+  lede:
+    "How do you teach a model what speech sounds like when there are almost no transcripts? Let it learn from raw audio first, and pool several African languages so each one helps the others.",
+  /** Original French title of the master's thesis, kept verbatim. */
+  thesisTitle:
     "Apprentissage multilingue et autosupervisé de la représentation de la parole pour les langues peu dotées",
-  titleEn:
-    "Multilingual, self-supervised learning of speech representations for low-resource languages",
-  institution: "Université de Yaoundé I (UY1)",
-  degree: "Master's research",
-  abstract:
-    "How do you teach a model what speech sounds like when there are almost no transcripts? By letting it learn from raw audio first, and by pooling several African languages so each one helps the others.",
   keywords: [
     "Self-supervised learning",
     "Speech representations",
     "Multilingual",
     "Low-resource languages",
   ],
-  /** The picture is yours; the caption only states what is visible on it. */
+  links: [
+    {
+      label: "Springer · CRI 2023",
+      href: "https://doi.org/10.1007/978-3-031-63110-8_7",
+    },
+    {
+      label: "ARIMA journal",
+      href: "https://doi.org/10.46298/arima.13416",
+    },
+  ],
+  /** The steps match the numbers drawn on the illustration. */
+  method: {
+    fig: "Fig. 4",
+    title: "The method, in one picture",
+    note: "Schematic. Each shape stands for one language.",
+    steps: [
+      {
+        title: "Listen without labels",
+        body: "Raw audio only: CPC, wav2vec and a bidirectional CPC learn representations without any transcripts.",
+      },
+      {
+        title: "Pool the languages",
+        body: "One encoder is trained on Wolof, Swahili and Fongbe together, using the ALFFA speech corpora.",
+      },
+      {
+        title: "Check what it learned",
+        body: "The encoder is frozen and a DeepSpeech-like recogniser is trained on top, one language at a time.",
+      },
+    ],
+  },
   photo: {
     src: "/images/research/cri2023-presentation.jpg",
     alt: "Black-and-white photo of the author presenting at CRI'2023, with a slide about Contrastive Predictive Coding behind him",
@@ -256,51 +271,11 @@ export const research = {
     width: 1400,
     height: 1419,
   },
-  /** The paper that came out of the research. Checked against the sources below. */
-  paper: {
-    label: "Published paper",
-    title:
-      "Self-supervised and Multilingual Learning Applied to the Wolof, Swahili and Fongbe",
-    authors: "Prestilien Djionang Pindoh, Paulin Melatagia Yonta",
-    venue:
-      "CRI 2023 (6th Conference on Research in Computer Science), Yaoundé, 12–13 December 2023",
-    proceedings:
-      "Research in Computer Science, Springer CCIS, pp. 80–91",
-    summary:
-      "Contrastive Predictive Coding, wav2vec and a bidirectional CPC, trained with multilingual learning on Wolof, Swahili and Fongbe, then tested on speech recognition with a DeepSpeech-like model.",
-    results: [
-      { language: "Fongbe", wer: "61%" },
-      { language: "Wolof", wer: "72%" },
-      { language: "Swahili", wer: "88%" },
-    ],
-    resultsNote: "Word error rate on the ASR task",
-    sources: [
-      {
-        label: "Springer proceedings",
-        href: "https://link.springer.com/book/10.1007/978-3-031-63110-8",
-      },
-      {
-        label: "Extended version (ARIMA journal)",
-        href: "https://arima.episciences.org/en/articles/13416",
-      },
-      {
-        label: "CRI'2023 accepted papers",
-        href: "http://cri-info.cm/?page_id=270",
-      },
-    ],
-  },
-  /** Facts first; empty `value` shows a marked slot for what you still need to provide. */
   details: [
-    { label: "Year", value: "", hint: "master's period, e.g. 2022–2023" },
-    { label: "Supervisor", value: "Paulin Melatagia Yonta", hint: "" },
-    {
-      label: "Models / data",
-      value: "CPC, wav2vec, bidirectional CPC · ALFFA corpora",
-      hint: "",
-    },
-    { label: "Thesis link", value: "", hint: "URL of the PDF or repository" },
+    { label: "Year", value: "2022–2023" },
+    { label: "Institution", value: "Université de Yaoundé I (UY1)" },
+    { label: "Supervisor", value: "Paulin Melatagia Yonta" },
   ],
-  placeholder: true,
 } as const;
 
 export const certifications = {
@@ -314,28 +289,18 @@ export const certifications = {
       issuer: "Amazon Web Services",
       href: "https://www.credly.com/badges/a20ef315-4458-4d29-9639-112695053779/public_url",
       image: "/images/aws-certified-developer-associate.png",
-      placeholder: false,
     },
     {
       title: "Deep Research with LangGraph",
       issuer: "LangChain Academy",
       href: "https://academy.langchain.com/certificates/pzfratlaov",
       image: "/images/langchain_academy_certificate.png",
-      placeholder: false,
     },
     {
       title: "Deep Agents with LangGraph",
       issuer: "LangChain Academy",
       href: "https://academy.langchain.com/certificates/fwsryt2jhm",
       image: "/images/certificate-714493365.jpg",
-      placeholder: false,
-    },
-    {
-      title: "Your next certification",
-      issuer: "Issuer — add name",
-      href: null,
-      image: null,
-      placeholder: true,
     },
   ],
 } as const;
@@ -360,8 +325,13 @@ export type Project = {
   blurb: string;
   year: string;
   tags: readonly string[];
-  /** null = an empty, marked image slot. */
-  image: { src: string; alt: string } | null;
+  /**
+   * null = an empty, marked image slot (or the drawing named in `illustration`).
+   * `position` is a CSS object-position for cropped photos; screenshots default to the top.
+   */
+  image: { src: string; alt: string; position?: string } | null;
+  /** Original drawing shown when there is no image yet. */
+  illustration?: "rl";
   links: ReadonlyArray<{ label: string; href: string }>;
   placeholder?: boolean;
 };
@@ -446,17 +416,19 @@ export const projects: readonly Project[] = [
     kind: "Master's research",
     blurb:
       "Self-supervised, multilingual speech representation learning for languages with little labelled data.",
-    year: "2023",
+    year: "2022 – 2023",
     tags: ["Self-supervised", "Speech", "Multilingual"],
     image: {
       src: "/images/research/cri2023-presentation.jpg",
       alt: "Presenting the speech representation paper at CRI'2023",
+      position: "50% 35%",
     },
     links: [
       {
-        label: "Read the paper",
-        href: "https://link.springer.com/book/10.1007/978-3-031-63110-8",
+        label: "Springer · CRI 2023",
+        href: "https://doi.org/10.1007/978-3-031-63110-8_7",
       },
+      { label: "ARIMA journal", href: "https://doi.org/10.46298/arima.13416" },
     ],
   },
   {
@@ -469,6 +441,7 @@ export const projects: readonly Project[] = [
     year: "2026",
     tags: ["TorchRL", "XAI", "Python"],
     image: null,
+    illustration: "rl",
     links: [],
     placeholder: true,
   },
@@ -561,6 +534,16 @@ export const work = {
   kicker: "The back room",
   title: "Welcome to the stacks.",
   lede: "Everything I am happy to show, filed by kind. Pick a drawer.",
+  stats: {
+    projects: "Projects",
+    drawers: "Drawers",
+    years: "Years",
+    live: "Live demos",
+  },
+  drawersTitle: "Drawers",
+  contentsTitle: "In this drawer",
+  githubTitle: "The rest is on GitHub.",
+  githubBody: "Every public repository, including the ones not filed here.",
   exitTop: "Back to the cover",
   exitBottom: "Back up to the cover",
   githubCta: "Still more on GitHub",

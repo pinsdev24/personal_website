@@ -640,12 +640,3 @@ body {
     visibility: hidden;
   }
 }
-
-.archive-row {
-  transition: background-color 0.2s ease;
-}
-
-.archive-row:hover,
-.archive-row:focus-within {
-  background: rgb(239 230 210 / 0.06);
-}

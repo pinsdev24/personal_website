@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import ProjectBrowser from "@/components/ProjectBrowser";
+import WorkArchive, { WorkStats } from "@/components/WorkArchive";
 import DraftTag from "@/components/DraftTag";
-import { githubArchive, projects, work } from "@/data/site";
+import { githubArchive, work } from "@/data/site";
 
 export const metadata: Metadata = {
   title: "All work",
@@ -23,29 +23,47 @@ export default function WorkPage() {
           </Link>
         </div>
 
-        <header className="max-w-3xl py-12 md:py-16">
-          <h1 className="display text-5xl font-semibold sm:text-6xl md:text-7xl">
-            {work.title}
-            <DraftTag show={work.placeholder} />
-          </h1>
-          <p className="mt-5 text-lg text-ink-soft">{work.lede}</p>
+        <header className="grid items-end gap-8 py-12 md:grid-cols-12 md:gap-10 md:py-16">
+          <div className="md:col-span-7">
+            <h1 className="display text-5xl font-semibold sm:text-6xl md:text-7xl">
+              {work.title}
+              <DraftTag show={work.placeholder} />
+            </h1>
+            <p className="mt-5 max-w-xl text-lg text-ink-soft">{work.lede}</p>
+          </div>
+          <div className="md:col-span-5">
+            <WorkStats />
+          </div>
         </header>
 
-        <ProjectBrowser projects={projects} />
+        <WorkArchive />
 
-        <div className="mt-16 flex flex-col items-start justify-between gap-6 border-t-[3px] border-double border-ink pt-6 sm:flex-row sm:items-center">
+        <section
+          aria-labelledby="github-title"
+          className="page-card mt-16 flex flex-col items-start justify-between gap-6 p-6 sm:flex-row sm:items-center md:p-8"
+        >
+          <div>
+            <h2 id="github-title" className="display text-3xl font-semibold">
+              {work.githubTitle}
+            </h2>
+            <p className="mt-2 text-ink-soft">{work.githubBody}</p>
+          </div>
           <a
             href={githubArchive}
             target="_blank"
-            rel="noreferrer"
-            className="btn btn-solid"
+            rel="noopener noreferrer"
+            className="btn btn-solid shrink-0"
           >
             {work.githubCta} <span aria-hidden="true">↗</span>
+            <span className="sr-only"> (opens in a new tab)</span>
           </a>
+        </section>
+
+        <p className="mt-10 text-right">
           <Link href="/" className="folio story-link">
             <span aria-hidden="true">↑</span> {work.exitBottom}
           </Link>
-        </div>
+        </p>
       </div>
     </div>
   );
