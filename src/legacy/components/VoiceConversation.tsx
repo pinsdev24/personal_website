@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useConversation } from '@elevenlabs/react'
 import { Mic, MicOff, Phone, PhoneOff, Volume2, VolumeX, Loader2 } from 'lucide-react'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
-import { fadeUp, stagger, viewportOnce } from '@/lib/animations'
+import { fadeUp, stagger, viewportOnce } from '@/legacy/lib/animations'
 
 function WavesCanvas({ speaking, reduce }: { speaking: boolean; reduce: boolean }) {
   const containerRef = useRef<HTMLDivElement | null>(null)

@@ -1,7 +1,7 @@
 "use client"
 import Image from 'next/image'
 import { motion } from 'framer-motion'
-import { fadeUp, stagger, viewportOnce } from '@/lib/animations'
+import { fadeUp, stagger, viewportOnce } from '@/legacy/lib/animations'
 
 type ExperienceItem = {
   company: string

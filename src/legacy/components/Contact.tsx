@@ -1,7 +1,7 @@
 "use client"
 import { motion, useReducedMotion } from 'framer-motion'
 import { ArrowUp, ArrowUpRight, Github, Linkedin, Mail, MapPin } from 'lucide-react'
-import { fadeUp, stagger, viewportOnce } from '@/lib/animations'
+import { fadeUp, stagger, viewportOnce } from '@/legacy/lib/animations'
 
 const socials = [
   {

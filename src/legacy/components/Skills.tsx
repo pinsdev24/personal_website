@@ -1,7 +1,7 @@
 "use client"
 import { motion } from 'framer-motion'
 import { Activity, Boxes, CloudUpload, Code2, Network } from 'lucide-react'
-import { fadeUp, stagger, viewportOnce } from '@/lib/animations'
+import { fadeUp, stagger, viewportOnce } from '@/legacy/lib/animations'
 
 const deliveryStages = [
   {

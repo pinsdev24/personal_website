@@ -1,36 +1,124 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Editorial portfolio
 
-## Getting Started
+A personal portfolio set as a small magazine: paper-toned palette, strong
+typography, numbered entries, margin notes, and a single **thread** that is
+sewn down the page as you scroll.
 
-First, run the development server:
+Built on the stack that was already in the repo: **Next.js 16 (App Router) ·
+React 19 · TypeScript · Tailwind CSS v4**. All motion is plain CSS, SVG and
+`requestAnimationFrame`; the new pages do not use any animation library.
+
+## Run it
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev      # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+```bash
+npm run lint     # ESLint
+npm run build    # production build (type-checks too)
+npm run start    # serve the production build
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Node 20+ is recommended. Fonts (Fraunces, Instrument Sans, Caveat) are fetched
+by `next/font` at build time, so the first build needs network access.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Pages
 
-## Learn More
+| Route   | What it is                                                                                          |
+| ------- | --------------------------------------------------------------------------------------------------- |
+| `/`     | Cover (slim hero + robot-arm illustration), the thread with illustrated journey cards, field notes (control / robotics / RL), the published paper from the master's research, selected work (sticky sidebar + scrolling projects), certifications |
+| `/work` | "The back room": a darker, themed archive of every project, with filter pills and an exit link at both ends |
 
-To learn more about Next.js, take a look at the following resources:
+The selected-work section keeps a narrow sticky left column (heading, one line,
+filter pills) while the three curated projects scroll on the right; it stacks on
+mobile. Which projects appear, and in which order, is `selected.slugs` in the
+data file. The work page follows a three-tier structure: those curated projects, a flat filterable archive one level deeper, and a pointer to the
+full GitHub for everything else. Copy, art and palette are original.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Editing the content
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+**Everything you are meant to edit lives in one file: [`src/data/site.ts`](src/data/site.ts).**
+It covers contact details, nav, hero copy, the journey stops, field notes, the
+master's research, certifications, the project list and the footer.
 
-## Deploy on Vercel
+Facts (names, links, dates, screenshots, certificates) come from the previous
+version of this portfolio (still in `src/legacy/`) or from the owner.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Images
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Each journey stop has `image: { src, alt, caption, position? } | null`
+(`position` is a CSS `object-position` for photos that get cropped). A stop with
+`image: null` shows no photo; on desktop its year fills the empty side of the
+spread instead. Projects use `image: { src, alt, position? } | null`.
+Photos live in `public/images/journey/` and `public/images/research/`,
+project screenshots in `public/images/projects/` (WebP, about 1800px wide).
+
+### Research and certifications
+
+`research` holds the published paper (title, authors, venue, DOI links), the
+French title of the master's thesis, a short details list and the steps that
+caption the method illustration. Add or remove certifications in
+`certifications.items`.
+
+## The thread (design note)
+
+The metaphor is a **saddle stitch**: the single thread that binds a zine. Each
+journey stop punches a "hole"; as you scroll, a vermilion twisted thread is
+sewn through them by a small needle.
+
+- `src/components/JourneyThread.tsx` measures the hole anchors, builds a cubic
+  Bezier path through them and reveals it with an SVG mask (stroke-dashoffset)
+  driven by a smoothed `requestAnimationFrame` loop that **only runs while the
+  thread is catching up with the scroll**.
+- Details: soft shadow and ply texture on the thread, a needle that follows the
+  path tangent, a spool counter ("Page 03 / 05"), a cross-stitch knot and ripple
+  when a hole is reached, cards that settle and image slots that wipe in, and
+  parallax doodles driven by one CSS variable.
+- On desktop each stop is a two-page spread across the thread: a large taped
+  photo on one side, an outlined year and the text on the other, alternating.
+- On narrow screens the thread runs down the left margin and the cards stack.
+- Without JavaScript, or with `prefers-reduced-motion: reduce`, the thread is
+  fully drawn, every card is visible, and no scroll listener is attached.
+
+### Illustrations
+
+`src/components/art/Illustrations.tsx` contains original SVG drawings of a
+robot arm, a control feedback loop with a step response, a LiDAR rover, an RL
+grid world with a reward curve, and a speech-embedding diagram. They animate
+with CSS only (transform, offset-path, stroke-dash) and are static under
+`prefers-reduced-motion`.
+
+## Accessibility
+
+- Semantic landmarks, a skip link, one `h1` per page, and a keyboard-operable
+  mobile menu (`aria-expanded`, closes with Escape).
+- Filter pills are toggle buttons (`aria-pressed`) with a polite live count.
+- The decorative SVG is `aria-hidden`; external links announce that they open
+  in a new tab; visible focus rings throughout.
+- Motion respects `prefers-reduced-motion` (reveals, thread, needle, illustrations).
+- Illustrations are `role="img"` with labels; decorative parts are `aria-hidden`.
+
+## Project layout
+
+```
+src/
+  app/            routes (/, /work), layout, global styles, sitemap
+  components/     SiteHeader, Hero, JourneyThread, FieldNotes, Research,
+                  Certifications, SelectedWork, WorkArchive, ImageSlot, art/Illustrations
+  data/site.ts    <- all editable content
+  legacy/         previous portfolio components (voice agent, chat widget, ...)
+  db/, app/api/   previous chat backend, untouched (db client is now lazy)
+```
+
+The previous site's components were moved to `src/legacy/` and are no longer
+rendered. `/api/chat` and the database client are unchanged except that the
+database connection is now created on first use, so `npm run build` works
+without `DATABASE_URL`. Delete `src/legacy/` once you are sure you do not need
+it.
+
+## Deploying
+
+Any Next.js host works; the project is set up for Vercel (analytics and speed
+insights are kept from the previous site).

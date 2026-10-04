@@ -1,7 +1,7 @@
 "use client"
 import Image from 'next/image'
 import { motion } from 'framer-motion'
-import { fadeUp, slideInLeft, slideInRight, stagger, viewportOnce } from '@/lib/animations'
+import { fadeUp, slideInLeft, slideInRight, stagger, viewportOnce } from '@/legacy/lib/animations'
 
 export default function About() {
   return (

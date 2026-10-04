@@ -1,75 +1,81 @@
-import type { Metadata } from "next";
-import { Inter, Geist_Mono } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Caveat, Fraunces, Instrument_Sans } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
-import ChatWidget from "@/components/ChatWidget";
-import CookieBanner from "@/components/CookieBanner";
-import { SpeedInsights } from '@vercel/speed-insights/next';
-import { Analytics } from '@vercel/analytics/next';
-import ThemeProvider from "@/components/ThemeProvider";
+import SiteHeader from "@/components/SiteHeader";
+import SiteFooter from "@/components/SiteFooter";
+import { profile } from "@/data/site";
 
-const inter = Inter({
-  variable: "--font-inter",
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  axes: ["SOFT", "WONK", "opsz"],
+  style: ["normal", "italic"],
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const instrument = Instrument_Sans({
+  variable: "--font-instrument",
   subsets: ["latin"],
+  display: "swap",
+});
+
+const caveat = Caveat({
+  variable: "--font-caveat",
+  subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://prestilienpindoh.me"),
-  title: "Prestilien Pindoh — AI/ML & Software Engineer",
-  description: "AI/ML and software engineer building production agents, observable ML systems, cloud APIs, and end-to-end products.",
-  keywords: [
-    "AI Engineer",
-    "Machine Learning Engineer",
-    "Software Engineer",
-    "MLOps",
-    "LangGraph",
-    "RAG",
-    "AWS",
-    "Brussels",
-  ],
+  metadataBase: new URL(profile.siteUrl),
+  title: {
+    default: profile.seo.title,
+    template: `%s · ${profile.name}`,
+  },
+  description: profile.seo.description,
   openGraph: {
-    title: "Prestilien Pindoh — AI/ML & Software Engineer",
-    description: "Production AI, observable ML systems, cloud delivery, and product ownership.",
-    url: "/",
-    siteName: "Prestilien Pindoh",
+    title: profile.seo.title,
+    description: profile.seo.description,
+    siteName: profile.name,
     type: "website",
-    images: [{ url: "/images/profile_image.jpg", alt: "Prestilien Pindoh" }],
+    images: [{ url: profile.portrait.src, alt: profile.portrait.alt }],
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "Prestilien Pindoh — AI/ML & Software Engineer",
-    description: "Production AI, observable ML systems, cloud delivery, and product ownership.",
-    images: ["/images/profile_image.jpg"],
-  },
-  icons: {
-    icon: "/images/profile.png",
-  },
+  icons: { icon: "/images/profile.png" },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#f2ebdb",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${inter.variable} ${geistMono.variable} antialiased`}
-      >
-        <ThemeProvider>
-          <div className="noise-overlay relative flex size-full min-h-screen flex-col overflow-x-hidden">
-            {children}
-            <ChatWidget />
-            <CookieBanner />
-            <SpeedInsights />
-            <Analytics />
-          </div>
-        </ThemeProvider>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${fraunces.variable} ${instrument.variable} ${caveat.variable}`}
+    >
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: "document.documentElement.classList.add('js')",
+          }}
+        />
+      </head>
+      <body>
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[100] focus:rounded focus:bg-ink focus:px-4 focus:py-2 focus:text-paper"
+        >
+          Skip to content
+        </a>
+        <SiteHeader />
+        <main id="main">{children}</main>
+        <SiteFooter />
+        <SpeedInsights />
+        <Analytics />
       </body>
     </html>
   );
