@@ -45,7 +45,7 @@ export function WorkStats() {
       {stats.map((s) => (
         <div key={s.label} className="bg-paper px-4 py-4 md:px-5">
           <dt className="folio">{s.label}</dt>
-          <dd className="display mt-1 text-3xl font-semibold md:text-4xl">{s.value}</dd>
+          <dd className="display mt-1 whitespace-nowrap text-2xl font-semibold sm:text-3xl">{s.value}</dd>
         </div>
       ))}
     </dl>
@@ -53,10 +53,10 @@ export function WorkStats() {
 }
 
 function Visual({ project, wide }: { project: Project; wide: boolean }) {
-  const ratio = wide ? "aspect-[16/10] lg:aspect-auto lg:h-full lg:min-h-80" : "aspect-[16/10]";
+  const ratio = "aspect-[16/10]";
   if (project.image) {
     return (
-      <div className={`relative overflow-hidden border-b border-ink/50 ${wide ? "lg:border-b-0 lg:border-r" : ""} ${ratio}`}>
+      <div className={`relative overflow-hidden border-b border-ink/50 ${wide ? "lg:border-b-0" : ""} ${ratio}`}>
         <Image
           src={project.image.src}
           alt={project.image.alt}
@@ -102,10 +102,10 @@ function Card({
       <article
         className={`page-card flex h-full flex-col overflow-hidden ${wide ? "lg:grid lg:grid-cols-5" : ""}`}
       >
-        <div className={wide ? "lg:col-span-3" : ""}>
+        <div className={wide ? "lg:col-span-3 lg:self-center" : ""}>
           <Visual project={project} wide={wide} />
         </div>
-        <div className={`flex flex-1 flex-col p-5 md:p-6 ${wide ? "lg:col-span-2 lg:justify-center" : ""}`}>
+        <div className={`flex flex-1 flex-col p-5 md:p-6 ${wide ? "lg:col-span-2 lg:justify-center lg:border-l lg:border-ink/50" : ""}`}>
           <p className="folio">
             <span className="text-vermilion">{String(number).padStart(2, "0")}</span>
             {" / "}

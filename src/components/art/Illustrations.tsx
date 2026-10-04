@@ -332,7 +332,7 @@ export function SpeechEmbedding(
       <g fontFamily="var(--font-caveat)" fontSize="22" fill={RED} stroke="none">
         <text x="14" y="206">waveform</text>
         <text x="296" y="64">f(θ)</text>
-        <text x="410" y="205">no labels needed</text>
+        <text x="490" y="205" textAnchor="end">no labels needed</text>
       </g>
       {numbered &&
         [
