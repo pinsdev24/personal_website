@@ -60,7 +60,7 @@ export const hero = {
     emphasis: "useful AI",
     after: " and products.",
   },
-  intro: "Agents, ML systems and the products around them, built end to end.",
+  intro: "Agents, ML systems and the apps around them, built end to end.",
   note: "scroll — follow the thread",
   cta: [
     { label: "Follow the thread", href: "/#journey", kind: "solid" },

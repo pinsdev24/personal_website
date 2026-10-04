@@ -31,10 +31,10 @@ function lengthAtY(ys: number[], length: number, y: number) {
 }
 
 const DOODLES = [
-  { cls: "left-[1.5%] top-[9%]", depth: -70, spin: 220, kind: "star" },
-  { cls: "right-[2%] top-[27%]", depth: -120, spin: -90, kind: "disc" },
-  { cls: "left-[3%] top-[56%]", depth: -50, spin: 60, kind: "squiggle" },
-  { cls: "right-[3%] top-[72%]", depth: -90, spin: 140, kind: "flag" },
+  { cls: "-left-20 top-[9%]", depth: -70, spin: 220, kind: "star" },
+  { cls: "-right-20 top-[27%]", depth: -120, spin: -90, kind: "disc" },
+  { cls: "-left-16 top-[56%]", depth: -50, spin: 60, kind: "squiggle" },
+  { cls: "-right-16 top-[72%]", depth: -90, spin: 140, kind: "flag" },
 ] as const;
 
 function Doodle({ kind }: { kind: (typeof DOODLES)[number]["kind"] }) {
@@ -289,8 +289,8 @@ export default function JourneyThread() {
             </div>
           </div>
 
-          {/* Parallax doodles in the margins (desktop) */}
-          <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0 hidden md:block">
+          {/* Parallax doodles in the page margins (wide screens) */}
+          <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0 hidden xl:block">
             {DOODLES.map((dd) => (
               <div
                 key={dd.kind}

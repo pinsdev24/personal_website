@@ -28,7 +28,7 @@ by `next/font` at build time, so the first build needs network access.
 
 | Route   | What it is                                                                                          |
 | ------- | --------------------------------------------------------------------------------------------------- |
-| `/`     | Cover (slim hero + robot-arm illustration), the thread with illustrated journey cards, field notes (control / robotics / RL), master's research with its published paper, selected work (sticky sidebar + scrolling projects), certifications |
+| `/`     | Cover (slim hero + robot-arm illustration), the thread with illustrated journey cards, field notes (control / robotics / RL), the published paper from the master's research, selected work (sticky sidebar + scrolling projects), certifications |
 | `/work` | "The back room": a darker, themed archive of every project, with filter pills and an exit link at both ends |
 
 The selected-work section keeps a narrow sticky left column (heading, one line,
@@ -43,33 +43,24 @@ full GitHub for everything else. Copy, art and palette are original.
 It covers contact details, nav, hero copy, the journey stops, field notes, the
 master's research, certifications, the project list and the footer.
 
-Placeholder content is clearly marked:
+Facts (names, links, dates, screenshots, certificates) come from the previous
+version of this portfolio (still in `src/legacy/`) or from the owner.
 
-- Facts (names, links, dates, screenshots, certificates) come from the previous
-  version of this portfolio (still in `src/legacy/`).
-- Wording drafted for this redesign carries `placeholder: true` and shows a
-  dashed red **draft** tag. Rewrite it, then set `placeholder` to `false`.
-- To hide every draft tag at once, set `showPlaceholderMarkers = false`.
+### Images
 
-### Image slots
-
-Each journey stop has an `image` slot: `{ src, suggestedPath, alt, caption, position? }`
-(`position` is a CSS `object-position` for photos that get cropped).
-While `src` is `null` the page shows a hatched dashed "Placeholder - image slot"
-frame displaying the suggested path. To fill one: drop the file in
-`public/images/journey/` (for example `01-valide.jpg`) and set
-`src: "/images/journey/01-valide.jpg"`. Projects use `image: { src, alt }` the
-same way (`null` shows a slot with the suggested `/images/projects/<slug>.png`).
-Certifications use `image`. Photos live in `public/images/journey/` and `public/images/research/`,
+Each journey stop has `image: { src, alt, caption, position? } | null`
+(`position` is a CSS `object-position` for photos that get cropped). A stop with
+`image: null` shows no photo; on desktop its year fills the empty side of the
+spread instead. Projects use `image: { src, alt, position? } | null`.
+Photos live in `public/images/journey/` and `public/images/research/`,
 project screenshots in `public/images/projects/` (WebP, about 1800px wide).
 
 ### Research and certifications
 
-`research` holds the UY1 master's title (French, verbatim), a draft English
-translation, abstract, keywords and a `details` list (year, supervisor, models,
-thesis link). Leave a `value` empty and the page shows a "to fill" tag. Add or
-remove certifications in `certifications.items`; an item with `href: null` and
-`image: null` renders as a placeholder card.
+`research` holds the published paper (title, authors, venue, DOI links), the
+French title of the master's thesis, a short details list and the steps that
+caption the method illustration. Add or remove certifications in
+`certifications.items`.
 
 ## The thread (design note)
 
@@ -82,9 +73,11 @@ sewn through them by a small needle.
   driven by a smoothed `requestAnimationFrame` loop that **only runs while the
   thread is catching up with the scroll**.
 - Details: soft shadow and ply texture on the thread, a needle that follows the
-  path tangent, a spool counter ("Page 03 / 07"), a cross-stitch knot and ripple
+  path tangent, a spool counter ("Page 03 / 05"), a cross-stitch knot and ripple
   when a hole is reached, cards that settle and image slots that wipe in, and
   parallax doodles driven by one CSS variable.
+- On desktop each stop is a two-page spread across the thread: a large taped
+  photo on one side, an outlined year and the text on the other, alternating.
 - On narrow screens the thread runs down the left margin and the cards stack.
 - Without JavaScript, or with `prefers-reduced-motion: reduce`, the thread is
   fully drawn, every card is visible, and no scroll listener is attached.
