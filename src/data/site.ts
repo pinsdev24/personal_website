@@ -164,7 +164,7 @@ export const fieldNotes = {
     {
       id: "control",
       fig: "Fig. 1",
-      title: "Autonomous system",
+      title: "Control theory",
       body: "Close the loop, measure the error, stay stable. The oldest good idea in engineering.",
     },
     {
