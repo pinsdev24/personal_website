@@ -28,7 +28,7 @@ by `next/font` at build time, so the first build needs network access.
 
 | Route   | What it is                                                                                          |
 | ------- | --------------------------------------------------------------------------------------------------- |
-| `/`     | Cover (slim hero + robot-arm illustration), the thread with illustrated journey cards, field notes (control / robotics / RL), the published paper from the master's research, selected work (sticky sidebar + scrolling projects), certifications |
+| `/`     | Personal field-guide cover with a framed portrait, the thread with illustrated journey spreads and chapter navigation, selected work, field notes (control / robotics / RL and an interactive robot arm), the published paper from the master's research, certifications |
 | `/work` | "The back room": a darker, themed archive of every project, with filter pills and an exit link at both ends |
 
 The selected-work section keeps a narrow sticky left column (heading, one line,
@@ -73,16 +73,24 @@ sewn through them by a small needle.
   driven by a smoothed `requestAnimationFrame` loop that **only runs while the
   thread is catching up with the scroll**.
 - Details: soft shadow and ply texture on the thread, a needle that follows the
-  path tangent, a spool counter ("Page 03 / 05"), a cross-stitch knot and ripple
-  when a hole is reached, cards that settle and image slots that wipe in, and
-  parallax doodles driven by one CSS variable.
+  path tangent, a cross-stitch knot and ripple when a hole is reached, and
+  parallax doodles driven by one CSS variable. Photos remain visible before
+  the needle reaches them; motion adds a subtle settling effect.
+- A sticky chapter index links to each stop and highlights the chapter nearest
+  the needle. On phones, the index scrolls horizontally to keep it in view.
+  The final stitch leads to a contact invitation.
 - On desktop each stop is a two-page spread across the thread: a large taped
-  photo on one side, an outlined year and the text on the other, alternating.
+  photo on one side, a vermilion year and the text on the other, alternating.
 - On narrow screens the thread runs down the left margin and the cards stack.
 - Without JavaScript, or with `prefers-reduced-motion: reduce`, the thread is
   fully drawn, every card is visible, and no scroll listener is attached.
 
 ### Illustrations
+
+`src/components/art/ThreadMachine.tsx` is the field notes' interactive study: a
+two-link arm solved with inverse kinematics guides the end of a sewing thread.
+Move the cursor over it, tap it, or focus it and use the arrow keys; Home resets
+it. Touch scrolling is left free. The illustration has no autonomous animation.
 
 `src/components/art/Illustrations.tsx` contains original SVG drawings of a
 robot arm, a control feedback loop with a step response, a LiDAR rover, an RL

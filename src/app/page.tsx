@@ -10,9 +10,9 @@ export default function Home() {
     <>
       <Hero />
       <JourneyThread />
+      <SelectedWork />
       <FieldNotes />
       <Research />
-      <SelectedWork />
       <Certifications />
     </>
   );

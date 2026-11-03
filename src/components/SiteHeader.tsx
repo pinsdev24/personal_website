@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { nav, profile } from "@/data/site";
 
-const SPY_IDS = ["journey", "field-notes", "research", "selected", "certifications", "contact"];
+const SPY_IDS = ["journey", "selected", "field-notes", "research", "certifications", "contact"];
 
 const NAV_SPY = new Set(nav.map((n) => hashOf(n.href)).filter(Boolean) as string[]);
 
