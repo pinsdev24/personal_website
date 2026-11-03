@@ -1,6 +1,7 @@
 import { fieldNotes } from "@/data/site";
 import Reveal from "./Reveal";
 import { ControlLoop, GridWorld, RoverLidar } from "./art/Illustrations";
+import ThreadMachine from "./art/ThreadMachine";
 
 const ART = {
   control: ControlLoop,
@@ -48,6 +49,21 @@ export default function FieldNotes() {
           );
         })}
       </ul>
+
+      <Reveal className="field-experiment">
+        <div className="field-experiment-art">
+          <ThreadMachine />
+        </div>
+        <div className="field-experiment-copy">
+          <p className="folio">{fieldNotes.experiment.kicker}</p>
+          <h3 className="display mt-3 text-3xl font-semibold sm:text-4xl">
+            {fieldNotes.experiment.title}
+          </h3>
+          <p className="mt-4 max-w-md text-ink-soft">{fieldNotes.experiment.body}</p>
+          <p className="field-experiment-instruction">{fieldNotes.experiment.instruction}</p>
+          <p className="hand mt-5 text-2xl">{fieldNotes.experiment.note}</p>
+        </div>
+      </Reveal>
     </section>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { journey } from "@/data/site";
 import ImageSlot from "./ImageSlot";
 
@@ -78,17 +79,21 @@ function Doodle({ kind }: { kind: (typeof DOODLES)[number]["kind"] }) {
 
 export default function JourneyThread() {
   const rootRef = useRef<HTMLDivElement>(null);
+  const indexRef = useRef<HTMLElement>(null);
   const anchorRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const measureRef = useRef<SVGPathElement>(null);
   const revealRef = useRef<SVGPathElement>(null);
   const needleRef = useRef<SVGGElement>(null);
   const spoolRef = useRef<SVGGElement>(null);
+  const endRef = useRef<HTMLSpanElement>(null);
   const geoRef = useRef<Geometry | null>(null);
   const motion = useRef({ cur: 0, target: 0, raf: 0, last: 0 });
   const reachedRef = useRef(-1);
+  const activeRef = useRef(0);
 
   const [geo, setGeo] = useState<Geometry | null>(null);
   const [reached, setReached] = useState(-1);
+  const [active, setActive] = useState(0);
   const [reduced, setReduced] = useState(false);
 
   useEffect(() => {
@@ -126,6 +131,10 @@ export default function JourneyThread() {
       d += ` C ${(prev.x + dir * sway).toFixed(1)} ${(prev.y + dy * 0.5).toFixed(1)}, ${(p.x - dir * sway).toFixed(1)} ${(p.y - dy * 0.5).toFixed(1)}, ${p.x.toFixed(1)} ${p.y.toFixed(1)}`;
       prev = p;
     });
+    const endY = endRef.current
+      ? endRef.current.getBoundingClientRect().top - rect.top + 14
+      : rect.height - 16;
+    d += ` C ${(prev.x + 30).toFixed(1)} ${(prev.y + 64).toFixed(1)}, ${(prev.x - 30).toFixed(1)} ${(endY - 64).toFixed(1)}, ${prev.x.toFixed(1)} ${endY.toFixed(1)}`;
 
     probe.setAttribute("d", d);
     const length = probe.getTotalLength();
@@ -191,9 +200,25 @@ export default function JourneyThread() {
         reachedRef.current = count;
         setReached(count);
       }
+      const nearest = g.stopLens.reduce((best, value, index, lengths) =>
+        Math.abs(value - len) < Math.abs(lengths[best] - len) ? index : best, 0);
+      if (nearest !== activeRef.current) {
+        activeRef.current = nearest;
+        setActive(nearest);
+      }
     },
     [reduced],
   );
+
+  useEffect(() => {
+    const nav = indexRef.current;
+    const current = nav?.children[active] as HTMLElement | undefined;
+    if (!nav || !current || nav.scrollWidth <= nav.clientWidth) return;
+    if (current.offsetLeft < nav.scrollLeft) nav.scrollLeft = current.offsetLeft;
+    else if (current.offsetLeft + current.offsetWidth > nav.scrollLeft + nav.clientWidth) {
+      nav.scrollLeft = current.offsetLeft + current.offsetWidth - nav.clientWidth;
+    }
+  }, [active]);
 
   const targetLength = useCallback(() => {
     const g = geoRef.current;
@@ -247,35 +272,49 @@ export default function JourneyThread() {
 
   const enhanced = geo !== null && !reduced;
   const total = journey.stops.length;
-  const page = Math.max(0, reached) + 1;
 
   return (
     <section
       id="journey"
       aria-labelledby="journey-title"
-      className={`relative overflow-hidden border-y border-ink bg-paper-deep/60 ${enhanced ? "js-thread" : ""}`}
+      className={`journey-section relative border-y border-ink ${enhanced ? "js-thread" : ""}`}
     >
-      <div className="mx-auto max-w-6xl px-5 py-16 md:px-8 md:py-24">
-        <header className="mx-auto max-w-2xl text-center">
-          <p className="folio">{journey.kicker}</p>
-          <h2
-            id="journey-title"
-            className="display mt-3 text-4xl font-semibold sm:text-5xl md:text-6xl"
-          >
-            {journey.title}
-          </h2>
-          <p className="mx-auto mt-5 max-w-lg text-lg text-ink-soft">
-            {journey.lede}
-          </p>
+      <div className="mx-auto max-w-6xl px-5 pb-16 pt-14 md:px-8 md:pb-20 md:pt-20">
+        <header className="journey-heading">
+          <div>
+            <p className="folio"><span className="text-vermilion">01 /</span> {journey.kicker}</p>
+            <h2
+              id="journey-title"
+              className="display mt-4 max-w-2xl text-4xl font-semibold sm:text-5xl md:text-6xl"
+            >
+              {journey.title}
+            </h2>
+          </div>
+          <div className="journey-heading-aside">
+            <p className="max-w-sm text-base text-ink-soft">
+              {journey.lede}
+            </p>
+            <p className="hand mt-4 text-2xl -rotate-2">a few turns along the way ↓</p>
+          </div>
         </header>
 
-        <div ref={rootRef} className="relative mt-14 md:mt-20">
-          {/* Sticky page counter with a spool that unwinds as you scroll */}
+        <nav ref={indexRef} aria-label="Journey chapters" className="chapter-index">
+          {journey.stops.map((stop, i) => (
+            <a key={stop.page} href={`#chapter-${i + 1}`} aria-current={!reduced && active === i ? "step" : undefined}>
+              <span className="chapter-index-number">{String(i + 1).padStart(2, "0")}</span>
+              <span><span className="chapter-index-year">{stop.year}</span><span className="chapter-index-title">{stop.chapter}</span></span>
+              <span aria-hidden="true" className="chapter-index-arrow">↘</span>
+            </a>
+          ))}
+        </nav>
+
+        <div ref={rootRef} className="journey-spreads relative mt-10 md:mt-12">
+          {/* The reel keeps its own height rather than stretching into a zero-height parent. */}
           <div
             aria-hidden="true"
-            className="pointer-events-none sticky top-[4.6rem] z-30 -mt-4 mb-4 flex h-0 justify-end overflow-visible md:justify-center"
+            className="pointer-events-none absolute -top-4 left-0 right-0 z-20 flex justify-end md:justify-center"
           >
-            <div className="flex items-center gap-2 rounded-full border-[1.5px] border-ink bg-paper px-3 py-1 shadow-[2px_2px_0_var(--color-vermilion)]">
+            <div className="thread-reel flex items-center gap-2 bg-paper px-3 py-1">
               <svg viewBox="0 0 32 32" className="h-6 w-6" fill="none" stroke="var(--color-ink)" strokeWidth="1.8" strokeLinecap="round">
                 <g ref={spoolRef}>
                   <circle cx="16" cy="16" r="11" fill="var(--color-card)" />
@@ -284,10 +323,12 @@ export default function JourneyThread() {
                 </g>
               </svg>
               <span className="folio !text-ink">
-                Page {String(page).padStart(2, "0")} / {String(total).padStart(2, "0")}
+                {String(total).padStart(2, "0")} chapters, one thread
               </span>
             </div>
           </div>
+
+          {!geo && <div aria-hidden="true" className="thread-fallback" />}
 
           {/* Parallax doodles in the page margins (wide screens) */}
           <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0 hidden xl:block">
@@ -368,13 +409,12 @@ export default function JourneyThread() {
             )}
           </svg>
 
-          <ol className="relative z-10 space-y-12 md:space-y-28">
+          <ol className="relative z-10 space-y-12 md:space-y-16">
             {journey.stops.map((stop, i) => {
               const right = i % 2 === 0;
               const on = reached >= i || !enhanced;
               const bigYear = (
                 <p
-                  aria-hidden="true"
                   className={`spread-year hidden md:block ${right ? "" : "md:text-right"}`}
                 >
                   {stop.year}
@@ -383,11 +423,12 @@ export default function JourneyThread() {
               return (
                 <li
                   key={stop.page}
+                  id={`chapter-${i + 1}`}
                   data-reached={on}
                   style={
                     { "--tilt": `${right ? 1.4 : -1.4}deg` } as React.CSSProperties
                   }
-                  className="thread-stop relative pl-12 md:grid md:min-h-[26rem] md:grid-cols-2 md:items-center md:pl-0"
+                  className="thread-stop relative pl-10 md:grid md:min-h-[29rem] md:grid-cols-2 md:items-center md:pl-0"
                 >
                   <span
                     ref={(el) => {
@@ -409,12 +450,12 @@ export default function JourneyThread() {
                     }`}
                   >
                     {stop.image ? (
-                      <div className="page-card p-3 pb-4">
+                      <div className="chapter-photo page-card p-3 pb-4">
                         <ImageSlot
                           slot={stop.image}
-                          aspect="aspect-[5/4]"
+                          aspect={i === 1 ? "aspect-[6/5]" : "aspect-[5/4]"}
                           sizes="(min-width: 1152px) 460px, 40vw"
-                          captionClassName="hand mt-3 text-center text-2xl"
+                          captionClassName="hand mt-3 text-center text-[1.4rem]"
                         />
                       </div>
                     ) : (
@@ -423,7 +464,7 @@ export default function JourneyThread() {
                   </div>
 
                   <article
-                    className={`thread-card page-card relative p-5 md:row-start-1 md:border-0 md:bg-transparent md:p-0 md:shadow-none ${
+                    className={`thread-card relative md:row-start-1 ${
                       right ? "md:col-start-2 md:ml-20" : "md:col-start-1 md:mr-20 md:text-right"
                     }`}
                   >
@@ -435,15 +476,12 @@ export default function JourneyThread() {
                       />
                     )}
                     {stop.image && bigYear}
-                    <div className="flex items-baseline justify-between gap-4 md:hidden">
-                      <p className="folio">{stop.page}</p>
-                      <p className="font-display text-3xl font-semibold italic text-vermilion">
+                    <div className="chapter-meta">
+                      <p className="chapter-eyebrow folio"><span className="text-vermilion">{String(i + 1).padStart(2, "0")}</span> / {stop.chapter}</p>
+                      <p className="font-display text-3xl font-semibold italic text-vermilion md:hidden">
                         {stop.year}
                       </p>
                     </div>
-                    <p className="folio hidden md:mt-4 md:block">
-                      {stop.page} · {stop.year}
-                    </p>
                     <h3 className="display mt-3 text-2xl font-semibold md:mt-2 md:text-4xl lg:text-[2.75rem]">
                       {stop.title}
                     </h3>
@@ -460,6 +498,12 @@ export default function JourneyThread() {
               );
             })}
           </ol>
+          <div className="thread-ending relative z-10">
+            <span ref={endRef} className="thread-end-knot" aria-hidden="true">✳</span>
+            <p className="folio">The story is still being written</p>
+            <p className="display mt-3 text-3xl sm:text-4xl">What comes next?</p>
+            <Link href="/#contact" className="cover-work-link mt-4">Let’s build it together <span aria-hidden="true">↗</span></Link>
+          </div>
         </div>
       </div>
     </section>

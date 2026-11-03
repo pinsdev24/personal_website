@@ -58,12 +58,13 @@ export const nav = [
 export const hero = {
   /** Headline is split so the middle part can be set in italic + highlighter. */
   headline: {
-    before: "I love building",
+    before: "I build",
     emphasis: "useful AI",
-    after: " and products.",
+    after: "& products.",
   },
   intro: "Agents, ML systems and the apps around them, built end to end.",
-  note: "scroll — follow the thread",
+  portraitLabel: "The person behind the work",
+  note: "Hi, I'm Prestilien.",
   cta: [
     { label: "Follow the thread", href: "/#journey", kind: "solid" },
     { label: "All work", href: "/work", kind: "ghost" },
@@ -76,11 +77,12 @@ export const hero = {
  */
 export const journey = {
   kicker: "The thread",
-  title: "Sewn together, one page at a time.",
-  lede: "A zine is held together by a single stitch. Scroll and watch the needle pass through each chapter.",
+  title: "Different chapters. One continuous thread.",
+  lede: "Founding, shipping, learning, starting again. Follow the thread through the work that has shaped how I build.",
   stops: [
     {
       page: "p. 01",
+      chapter: "First beginnings",
       year: "2021",
       title: "Co-founded VALIDE",
       body: "Set the technical direction of an education product, from the first architecture sketches to AI-assisted learning.",
@@ -93,6 +95,7 @@ export const journey = {
     },
     {
       page: "p. 02",
+      chapter: "Learning by shipping",
       year: "2023",
       title: "Shipped for other people",
       body: "Full-stack work at Surfyn: web, mobile and backend features, polished on the outside and dependable underneath.",
@@ -105,6 +108,7 @@ export const journey = {
     },
     {
       page: "p. 03",
+      chapter: "Something of my own",
       year: "2023",
       title: "Started Afrik Delices",
       body: "A food-tech platform for authentic African recipes. I own the product direction and the engineering.",
@@ -117,6 +121,7 @@ export const journey = {
     },
     {
       page: "p. 04",
+      chapter: "Going deeper",
       year: "2025",
       title: "Went deep on production AI",
       body: "Agents with explicit control flow, retrieval that cites its sources, ML systems tracked from experiment to container.",
@@ -130,6 +135,7 @@ export const journey = {
     },
     {
       page: "p. 05",
+      chapter: "New questions",
       year: "2026",
       title: "Research at Multitel",
       body: "Reinforcement learning and explainability for intelligent systems, with reproducible experiments.",
@@ -148,6 +154,7 @@ export const journey = {
   lede: string;
   stops: ReadonlyArray<{
     page: string;
+    chapter: string;
     year: string;
     title: string;
     body: string;
@@ -160,6 +167,13 @@ export const journey = {
 export const fieldNotes = {
   kicker: "Field notes",
   title: "Three things I cannot stop thinking about.",
+  experiment: {
+    kicker: "Interactive study",
+    title: "A little curiosity, in motion.",
+    body: "Move the needle and watch the arm find its way. A small sketch of how geometry turns intention into movement.",
+    instruction: "Move your cursor or tap the sketch. With a keyboard, focus the arm and use the arrow keys; Home resets it.",
+    note: "Go on, pull the thread.",
+  },
   figures: [
     {
       id: "control",
